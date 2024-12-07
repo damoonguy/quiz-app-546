@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="public/css/index.css">
+    <title>Document</title>
+</head>
+<body>
+  <div class="layout">
+    <!-- Top Bar -->
+    <span class="top-bar">
+      <input type="text" placeholder="Search..." class="search-bar" />
+      <button class="profile-settings">Profile Settings</button>
+      {{#if user}}
+        <button>My Profile</button>
+      {{else}}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+      {{/if}}
+    </span>
+    
+    <!-- Main Content Layout -->
+    <div class="main-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <ul class="misc-items">
+          <li><a href="#">Item 1</a></li>
+          <li><a href="#">Item 2</a></li>
+          <li><a href="#">Item 3</a></li>
+        </ul>
+      </aside>
+    
+
+    <!-- Main Content Area -->
+    <main class="content">
+      {{!-- Content goes here --}}
+      {{{body}}}
+    </main>
+    </div>
+  </div>
+</body>
+</html>

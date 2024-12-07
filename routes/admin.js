@@ -24,3 +24,6 @@ router.route('/admin')
       
     }
   });
+
+
+export default router;
