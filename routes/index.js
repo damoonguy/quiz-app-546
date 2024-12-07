@@ -3,11 +3,13 @@
 
 import userRoutes from "./users.js"
 import adminRoutes from "./admin.js"
+import quizRoutes from "./quizzes.js"
 
 
 const buildRoutes = (app) => {
     app.use('/admin', adminRoutes)
     app.use('/', userRoutes)
+    app.use('/quiz', quizRoutes)
     app.use('*', (req, res) => {
         return res.status(404).json({error: 'Not Found'})
     });

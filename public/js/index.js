@@ -3,7 +3,8 @@
 import jwt from "jsonwebtoken" 
 import bcrypt from "bcryptjs"
 import xss from "xss"
-import { users } from "../../config/mongoCollections.js"
+import { users, quizzes } from "../../config/mongoCollections.js"
+import { ObjectId } from "mongodb"
 
 const generateToken = (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET, {
@@ -13,6 +14,7 @@ const generateToken = (id) => {
 
 export const registerUser = async (body) => {
     try {
+        // xss prevention
         const {username, email, password} = body;
         if (!username || !email || !password) {
             throw "All parameters must be supplied."
@@ -50,6 +52,7 @@ export const registerUser = async (body) => {
 
 export const loginUser = async (body) => {
     try {
+        // xss prevention
         const {email, password} = body;
         if (!email || !password) {
             throw "All parameters must be supplied."
@@ -74,4 +77,28 @@ export const loginUser = async (body) => {
     }
     
 
+}
+
+export const createQuiz = async (form) => {
+    try {
+        // validation
+        // xss prevention
+        // save quiz to user
+    } catch (e) {
+
+    }
+}
+
+export const getQuiz = async (id) => {
+    try {
+        if (!ObjectId.isValid(id)) {
+            throw "Invalid object ID"
+        }
+        const col = quizzes();
+        const quiz = await col.findOne({_id: new ObjectId(id)})
+        return quiz;
+    } catch (e) {
+        console.error(e)
+        throw e;
+    }
 }

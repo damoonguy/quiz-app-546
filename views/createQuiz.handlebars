@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz</title>
+    <script src="../public/js/create-quiz.js"></script>
+</head>
+<body>
+    <div class="create-quiz-container">
+    <h1>Create a Quiz</h1>
+        <form id="quiz-setup-form">
+            <label for="number-of-questions">How many questions do you want in your quiz?</label>
+            <input
+            type="number"
+            id="number-of-questions"
+            min="1"
+            placeholder="Enter number of questions"
+            required
+            />
+            <button type="button" id="generate-questions-btn">Generate Questions</button>
+        </form>
+
+        <form id="quiz-form" action="/quiz/create" method="POST" style="display: none;">
+            <label for="quiz-title">Quiz Title</label>
+            <input type="text" id="quiz-title" name="title" placeholder="Enter quiz title" required />
+
+            <div id="questions-container"></div>
+
+            <button type="submit">Create Quiz</button>
+        </form>
+    </div>
+
+    
+</body>
+</html>
