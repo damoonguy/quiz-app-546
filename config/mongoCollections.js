@@ -16,3 +16,5 @@ const getCollectionFn = (collection) => {
 // Just import these collections and call them on-demand to access the mongodb
 export const users = getCollectionFn('users');
 export const quizzes = getCollectionFn('quizzes'); 
+
+export const dashboardStats = getCollectionFn('dashboardStats'); // Added this for Dashboard
