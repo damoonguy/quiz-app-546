@@ -5,23 +5,23 @@ import validation from '../helpers.js';
 let questionsDataFunctions = {
     // get all the questions in the questions collection
     async getAllQuestions() {
-        const questionsCollection = await questions();
-        const questionList = await questionsCollection.find({}).toArray();
+        const questionCollection = await questions();
+        const questionList = await questionCollection.find({}).toArray();
         return questionList;
     },
 
     // get question based on their question id
     async getQuestionById(id) {
         id = validation.checkId(id);
-        const questionsCollection = await questions();
-        const question = await questionsCollection.findOne({ _id: new ObjectId(id) });
+        const questionCollection = await questions();
+        const question = await questionCollection.findOne({ _id: new ObjectId(id) });
         if (!question) throw 'Error: User not found'; // if there is no user with that id, then that user does not exist
         return question;
     },
 
     // create a new question
     // work in progress: may have to add a function per type of question (mc, T/F, short answer)
-    async addQuestion(question, correctAnswer, choices) {
+    async addQuestion(question, correctAnswer, choices) { // add quizId? we need to know which quiz it belongs to
         
         // error checking for question
         question = validation.checkString(question);
@@ -44,8 +44,8 @@ let questionsDataFunctions = {
         };
 
         let res = { addedQuestionStatus: false }; // this object will tell use if the registration was successful or not
-        const questionsCollection = await questions();
-        const insertInfo = await questionsCollection.insertOne(newQuestion); // insert new user info into the collection
+        const questionCollection = await questions();
+        const insertInfo = await questionCollection.insertOne(newQuestion); // insert new user info into the collection
         if (!insertInfo.acknowledged || !insertInfo.insertedId) { // check if the insertInfo is acknowledged, and if the insertedId exists
             throw 'Could not add question'; // if either condition is met, then the user cannot be added
         }
@@ -56,15 +56,15 @@ let questionsDataFunctions = {
         // we need to choose whether we return a status report or the new question itself
         // const newQuestionId = insertInfo.insertedId.toString(); // turn the new question's id into a string
 
-        // const q = await this.getUserById(newQuestionId); // find the question that was just added
+        // const q = await this.getQuestionById(newQuestionId); // find the question that was just added
 
         return res; // return whether adding the new question is successful or not
     },
 
     async deleteQuestion(questionId) {
         questionId = validation.checkId(questionId);
-        const questionsCollection = await questions();
-        const deletionInfo = await questionsCollection.findOneAndDelete({
+        const questionCollection = await questions();
+        const deletionInfo = await questionCollection.findOneAndDelete({
             _id: new ObjectId(questionId)
         });
         if(!deletionInfo) throw 'Error: Could not delete question with id of ${questionId}.';
@@ -80,8 +80,8 @@ we can ignore these for now. These are some functions I made I thought we would 
 // get question based on their subject
     async getQuestionBySubject(subjectId) {
         subjectId = validation.checkId(subjectId);
-        const questionsCollection = await questions();
-        const question = await questionsCollection.findOne({ _id: new ObjectId(subjectId) });
+        const questionCollection = await questions();
+        const question = await questionCollection.findOne({ _id: new ObjectId(subjectId) });
         if (!question) throw 'Error: User not found'; // if there is no user with that id, then that user does not exist
         return question;
     },
