@@ -61,6 +61,17 @@ let topicDataFunctions = {
 
         return res; // return whether adding the new topic is successful or not
     },
+
+    // delete topic
+    async deleteTopic(topicId) {
+        topicId = validation.checkId(topicId);
+        const topicCollection = await topics();
+        const deletionInfo = await topicCollection.findOneAndDelete({
+            _id: new ObjectId(topicId)
+        });
+        if(!deletionInfo) throw 'Error: Could not delete topic with id of ${topicId}.';
+        return{...deletionInfo, deleted: true}; // return an object of which subject is deleted and the deletion status
+    }   
 };
 
 export default topicDataFunctions;
