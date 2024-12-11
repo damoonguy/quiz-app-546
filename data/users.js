@@ -92,11 +92,15 @@ let userDataFunctions = {
         if (!insertInfo.acknowledged || !insertInfo.insertedId) { // check if the insertInfo is acknowledged, and if the insertedId exists
             throw 'Could not add user'; // if either condition is met, then the user cannot be added
         }
-        // res.registrationCompleted = true; // otherwise, return that it's successful
+        else{
+            res.registrationCompleted = true; // otherwise, return that it's successful
+        }
 
-        const newUserId = insertInfo.insertedId.toString(); // turn the new user's id into a string
+        
+        // we need to choose whether we return a status report or the new user itself    
+        // const newUserId = insertInfo.insertedId.toString(); // turn the new user's id into a string
 
-        const user = await this.getUserById(newUserId); // find the user that was just added
+        // const user = await this.getUserById(newUserId); // find the user that was just added
 
         return res; // return whether the registration is successful or not
     },
