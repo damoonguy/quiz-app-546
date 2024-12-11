@@ -16,9 +16,9 @@ let quizDataFunctions = {
     async getQuizById(quizId) {
         quizId = validation.checkId(quizId); // error checking for quizId
         const quizCollection = await quizzes();
-        const idQuiz = await quizCollection.find({'quizId': quizId}).toArray();
+        const idQuiz = await quizCollection.find({ 'quizId': quizId }).toArray();
 
-        if(!idQuiz) throw 'Error: Quiz not found';
+        if (!idQuiz) throw 'Error: Quiz not found';
 
         return idQuiz;  // return the quiz 
     },
@@ -27,9 +27,9 @@ let quizDataFunctions = {
     async getAllQuizzesByUser(userId) {
         userId = validation.checkId(userId); // error checking for userId
         const quizCollection = await quizzes();
-        const userQuizList = await quizCollection.find({'userId': userId}).toArray();
+        const userQuizList = await quizCollection.find({ 'userId': userId }).toArray();
 
-        if(userQuizList.length === 0) { // if the list of quizzes they made is empty,
+        if (userQuizList.length === 0) { // if the list of quizzes they made is empty,
             throw 'Error: No quizzes found for this user.' // throw an error
         }
 
@@ -40,9 +40,9 @@ let quizDataFunctions = {
     async getAllQuizzesBySubject(subjectId) {
         subjectId = validation.checkId(subjectId); // error checking for subjectId
         const quizCollection = await quizzes();
-        const subjectQuizList = await quizCollection.find({'subjectId': subjectId}).toArray();
+        const subjectQuizList = await quizCollection.find({ 'subjectId': subjectId }).toArray();
 
-        if(subjectQuizList.length === 0) { // if the list of quizzes they made is empty,
+        if (subjectQuizList.length === 0) { // if the list of quizzes they made is empty,
             throw 'Error: No quizzes found for this subject.' // throw an error
         }
 
@@ -52,7 +52,7 @@ let quizDataFunctions = {
     // create a new quiz
     // this will create an empty quiz initially. then, the user can add questions to it.
     async createQuiz(userId, subjectId, questionCount) {
-        
+
         // error checking for userId
         userId = validation.checkId(userId);
 
@@ -70,7 +70,7 @@ let quizDataFunctions = {
             hasQuizStarted: false, // if the user already started taking the quiz
             isQuizInSession: false, // is set to false once the user logs out
             // questions: qIds,
-            requiredScore: requiredScore 
+            requiredScore: requiredScore
         };
 
         let res = { createdQuiz: false }; // this object will tell use if the registration was successful or not
@@ -82,7 +82,7 @@ let quizDataFunctions = {
         else {
             res.createdQuiz = true; // otherwise, return that it's successful
         }
-    
+
         // we need to choose whether we return a status report or the new question itself
         // const newQuizId = insertInfo.insertedId.toString(); // turn the new question's id into a string
 
@@ -90,4 +90,15 @@ let quizDataFunctions = {
 
         return res; // return whether adding the new question is successful or not
     },
+
+    // delete quiz
+    async deleteQuiz(quizId) {
+        quizId = validation.checkId(quizId);
+        const quizCollection = await quizzes();
+        const deletionInfo = await quizCollection.findOneAndDelete({
+            _id: new ObjectId(quizId)
+        });
+        if (!deletionInfo) throw 'Error: Could not delete quiz with id of ${quizId}.';
+        return { ...deletionInfo, deleted: true }; // return an object of which quiz is deleted and the deletion status
+    }
 }
