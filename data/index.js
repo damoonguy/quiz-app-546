@@ -4,6 +4,7 @@ import quizDataFunctions from './quizzes.js';
 import subjectDataFunctions from './subjects.js';
 
 export const userData = userDataFunctions;
-export const questionData = questionDataFunctions;
+export const questionData = questionsDataFunctions;
 export const quizData = quizDataFunctions;
 export const subjectData = subjectDataFunctions;
+export const topicData = topicDataFunctions;

@@ -51,10 +51,10 @@ let userDataFunctions = {
         // html input type will check that it's a valid email, should we do checking here too? 
         const userCollection = await users();
         const someUser = await userCollection.findOne(
-            {"email": email}
+            { "email": email }
         );
 
-        if(someUser !== null) throw 'Error: Email is already in use.'; // check if another user already used that email
+        if (someUser !== null) throw 'Error: Email is already in use.'; // check if another user already used that email
 
         // error checking for userName (like a user nickname)
         userName = validation.checkString(userName, 'User name');
@@ -92,11 +92,15 @@ let userDataFunctions = {
         if (!insertInfo.acknowledged || !insertInfo.insertedId) { // check if the insertInfo is acknowledged, and if the insertedId exists
             throw 'Could not add user'; // if either condition is met, then the user cannot be added
         }
-        // res.registrationCompleted = true; // otherwise, return that it's successful
+        else {
+            res.registrationCompleted = true; // otherwise, return that it's successful
+        }
 
-        const newUserId = insertInfo.insertedId.toString(); // turn the new user's id into a string
 
-        const user = await this.getUserById(newUserId); // find the user that was just added
+        // we need to choose whether we return a status report or the new user itself    
+        // const newUserId = insertInfo.insertedId.toString(); // turn the new user's id into a string
+
+        // const user = await this.getUserById(newUserId); // find the user that was just added
 
         return res; // return whether the registration is successful or not
     },
@@ -122,7 +126,7 @@ let userDataFunctions = {
         // find user by their email
         const userCollection = await users();
         const user = await userCollection.findOne(
-            {"email": email}
+            { "email": email }
         );
         if (user === null) throw 'User with that email not found';
 
@@ -134,6 +138,17 @@ let userDataFunctions = {
         }
 
         return user; // return the user
+    },
+
+    // delete user
+    async deleteUser(userId) {
+        userId = validation.checkId(userId);
+        const userCollection = await users();
+        const deletionInfo = await userCollection.findOneAndDelete({
+            _id: new ObjectId(userId)
+        });
+        if (!deletionInfo) throw 'Error: Could not delete user with id of ${userId}.';
+        return { ...deletionInfo, deleted: true }; // return an object of which user is deleted and the deletion status
     }
 };
 
