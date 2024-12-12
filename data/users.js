@@ -24,12 +24,12 @@ let userDataFunctions = {
     async signUpUser(
         firstName,
         lastName,
-        userId,
         email,
         userName,
         password,
-        quizzes
+        role
     ) {
+      try {
         // error checking for firstName
         firstName = validation.checkString(firstName, 'First name');
         for (let x of firstName) {  // check whether it has numbers (throw an error if yes)
@@ -37,6 +37,7 @@ let userDataFunctions = {
                 throw 'Error: First name cannot contain numbers.'
             }
         }
+        console.log(firstName)
 
         // error checking for lastName
         lastName = validation.checkString(lastName, 'Last name');
@@ -45,20 +46,25 @@ let userDataFunctions = {
                 throw 'Error: Last name cannot contain numbers.'
             }
         }
+        console.log(lastName)
 
         // error checking for email
-        email = validation.checkString(email, 'Email');
         // html input type will check that it's a valid email, should we do checking here too? 
+        console.log(email)
+        
         const userCollection = await users();
-        const someUser = await userCollection.findOne(
-            { "email": email }
-        );
+        console.log(userCollection)
+        const someUser = await userCollection.findOne({ email });
+        
 
-        if (someUser !== null) throw 'Error: Email is already in use.'; // check if another user already used that email
+        if (someUser != null) throw 'Error: Email is already in use.'; // check if another user already used that email
+
+        
 
         // error checking for userName (like a user nickname)
         userName = validation.checkString(userName, 'User name');
 
+        console.log(userName)
         // error checking for password
         password = validation.checkString(password, 'Password');
         for (let x of password) {  // check whether it has spaces (throw an error if yes)
@@ -70,8 +76,12 @@ let userDataFunctions = {
             throw 'Error: Password must be at least 8 characters long.';
         }
 
-        /*******************error checking end******************/
+        role = validation.checkString(role)
 
+        if (role !== 'user' && role !== 'admin') throw "Role must be either 'user' or 'admin'"
+
+        /*******************error checking end******************/
+        console.log('inpVal passed')
         // hash password using bcrypt
         const saltRounds = 16;
         const hash = await bcrypt.hash(password, saltRounds);
@@ -80,29 +90,36 @@ let userDataFunctions = {
         let newUser = {
             firstName: firstName,
             lastName: lastName,
-            userId: new ObjectId(),
             email: email,
             userName: userName,
-            quizzes: []
+            password: hash,
+            quizzes: [],
+            role: role
         };
 
-        let res = { registrationCompleted: false }; // this object will tell use if the registration was successful or not
+        let registrationCompleted = false // this var will tell use if the registration was successful or not
         userCollection = await users();
         const insertInfo = await userCollection.insertOne(newUser); // insert new user info into the collection
         if (!insertInfo.acknowledged || !insertInfo.insertedId) { // check if the insertInfo is acknowledged, and if the insertedId exists
             throw 'Could not add user'; // if either condition is met, then the user cannot be added
         }
         else {
-            res.registrationCompleted = true; // otherwise, return that it's successful
+            registrationCompleted = true; // otherwise, return that it's successful
         }
 
 
         // we need to choose whether we return a status report or the new user itself    
-        // const newUserId = insertInfo.insertedId.toString(); // turn the new user's id into a string
+        // {Michael}: I opt for both, so we can load home.handlebars within the /register route
 
-        // const user = await this.getUserById(newUserId); // find the user that was just added
+        const returnObj = {
+            user: newUser,
+            registrationCompleted
+        }
 
-        return res; // return whether the registration is successful or not
+        return returnObj; // return registration status and user data
+      } catch (e) {
+        throw e
+      }
     },
 
     async signInUser(email, password) {
@@ -132,7 +149,7 @@ let userDataFunctions = {
 
         // error checking for password
         // if email supplied is found in the DB, use bcrypt to compare the hashed password in the database w/ password input parameter
-        let compareToMatch = await bcrypt.compare(password, user.hash);
+        let compareToMatch = await bcrypt.compare(password, user.password);
         if (!compareToMatch) {
             throw 'Either the email or password is invalid';
         }
@@ -147,7 +164,7 @@ let userDataFunctions = {
         const deletionInfo = await userCollection.findOneAndDelete({
             _id: new ObjectId(userId)
         });
-        if (!deletionInfo) throw 'Error: Could not delete user with id of ${userId}.';
+        if (!deletionInfo) throw `Error: Could not delete user with id of ${userId}.`;
         return { ...deletionInfo, deleted: true }; // return an object of which user is deleted and the deletion status
     }
 };
