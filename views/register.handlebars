@@ -10,11 +10,24 @@
     <div class="registration-page">
     <h1>Register</h1>
     <div>{{errorMsg}}</div>
-    <form class="registration-form" method="POST" action="/">
+    <form class="registration-form" method="POST" action="/register">
+        
+        <!-- First Name -->
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Enter your First Name" required />
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Enter your Last Name" required />
+        </div>
+        
         <!-- Username -->
         <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter your username" required />
+            <label for="userName">Username</label>
+            <input type="text" id="userName" name="userName" placeholder="Enter your username" required />
         </div>
 
         <!-- Email -->
@@ -29,12 +42,19 @@
             <input type="password" id="password" name="password" placeholder="Enter your password" required />
         </div>
 
+        <!-- Role -->
+        <label for="role">Role: </label>
+        <select id="role" name="role">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select>
+
         <!-- Submit Button -->
         <div class="form-group">
             <button type="submit" class="btn-submit">Register</button>
         </div>
     </form>
-    <p>Already a member? <a href="/login">Login</a></p>
+    <p>Already a registered? <a href="/login">Login</a></p>
 </div>
 </body>
 </html>

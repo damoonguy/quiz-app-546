@@ -2,8 +2,8 @@
 import express from 'express';
 import path, {dirname} from 'path'
 import exphbs from "express-handlebars"
+import session from "express-session"
 import bodyParser from "body-parser"
-import cors from "cors"
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -16,7 +16,12 @@ import {fileURLToPath} from 'url'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-
+app.use(session({
+  name: 'AuthenticationState',
+  secret: 'JAXWORLD',
+  resave: false,
+  saveUninitialized: false
+}))
 
 const handlebarsInstance = exphbs.create({
   defaultLayout: 'main',
@@ -47,7 +52,6 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   next();
 };
 
-app.use(cors());
 app.use('/public', express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

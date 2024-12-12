@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    console.log('help')
     const quizSetupForm = document.getElementById("quiz-setup-form");
     const generateQuestionsBtn = document.getElementById("generate-questions-btn");
     const quizForm = document.getElementById("quiz-form");
