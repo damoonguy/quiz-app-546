@@ -1,25 +1,31 @@
-//You can add and export any helper functions you want here. If you aren't using any, then you can just leave this file as is.
-const exportedMethods = {
-    checkId(id) {
-        if (!id) throw 'Error: You must provide an userId to search for';
-        if (typeof id !== 'string') throw 'Error: userId must be a string';
-        id = id.trim();
-        if (id.length === 0)
-            throw 'Error: userId cannot be an empty string or just spaces';
-        // if (!ObjectId.isValid(id)) throw 'Error : invalid object ID';
-        return id;
-    },
+import bcrypt from 'bcrypt';
 
-    checkString(strVal, varName) {
-        if (!strVal) throw 'Error: You must supply a ${varName}!';
-        if (typeof strVal !== 'string') throw 'Error: ${varName} must be a string!';
-        strVal = strVal.trim();
-        if (strVal.length === 0)
-            throw 'Error: ${varName} cannot be an empty string or string with just spaces';
-        if (!isNaN(strVal))
-            throw 'Error: ${strVal} is not a valid value for ${varName} as it only contains digits';
-        return strVal;
-    }
+export const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
 
-export default exportedMethods;
+export const validatePassword = (password) => {
+  return password.length >= 8;
+};
+
+export const validateName = (name) => {
+  return name.trim().length >= 2 && /^[a-zA-Z\s-]+$/.test(name);
+};
+
+export const validateUsername = (username) => {
+  return username.trim().length >= 3 && /^[a-zA-Z0-9_-]+$/.test(username);
+};
+
+export const validateRole = (role) => {
+  return ['user', 'admin'].includes(role);
+};
+
+export const hashPassword = async (password) => {
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
+};
+
+export const comparePasswords = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
+};

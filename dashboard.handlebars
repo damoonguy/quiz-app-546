@@ -1,0 +1,81 @@
+<div class="user-dashboard">
+    <div class="dashboard-header">
+        <h1>Welcome, {{user.username}}</h1>
+        <a href="/logout" class="btn-danger">Logout</a>
+    </div>
+
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <h3>Quizzes Taken</h3>
+            <p>{{user.quizzesTaken}}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Average Score</h3>
+            <p>{{user.averageScore}}%</p>
+        </div>
+        <div class="stat-card">
+            <h3>Completed Today</h3>
+            <p>{{user.todayQuizzes}}</p>
+        </div>
+    </div>
+
+    <div class="dashboard-sections">
+        <!-- Available Quizzes Section -->
+        <section class="quiz-section">
+            <h2>Available Quizzes</h2>
+            <div class="search-bar">
+                <input type="text" placeholder="Search quizzes..." id="quiz-search">
+            </div>
+            <div class="quiz-grid">
+                {{#each availableQuizzes}}
+                <div class="quiz-card">
+                    <h3>{{this.title}}</h3>
+                    <p>{{this.description}}</p>
+                    <div class="quiz-meta">
+                        <span>Questions: {{this.questionCount}}</span>
+                        <span>Category: {{this.category}}</span>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn-primary" onclick="startQuiz('{{this._id}}')">Take Quiz</button>
+                        <button class="btn-secondary" onclick="saveForLater('{{this._id}}')">Save</button>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <h2>Your Progress</h2>
+            <div class="progress-grid">
+                {{#each inProgressQuizzes}}
+                <div class="progress-card">
+                    <h3>{{this.title}}</h3>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: {{this.progress}}%"></div>
+                    </div>
+                    <button class="btn-primary" onclick="continueQuiz('{{this._id}}')">Continue</button>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+
+        <!-- Recent Results Section -->
+        <section class="results-section">
+            <h2>Recent Results</h2>
+            <div class="results-list">
+                {{#each recentResults}}
+                <div class="result-card">
+                    <h3>{{this.quizTitle}}</h3>
+                    <div class="result-details">
+                        <span>Score: {{this.score}}%</span>
+                        <span>Time: {{this.completionTime}}</span>
+                        <span>Date: {{this.date}}</span>
+                    </div>
+                    <button class="btn-secondary" onclick="reviewQuiz('{{this._id}}')">Review</button>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+    </div>
+</div>
