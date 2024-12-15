@@ -1,6 +1,6 @@
 import { quizzes } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
-import validation from '../helpers.js';
+import validation from '../validation.js';
 import subjectDataFunctions from './subjects.js';
 import questionsDataFunctions from './questions.js';
 

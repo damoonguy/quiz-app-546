@@ -1,8 +1,8 @@
 import { questions } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
-import validation from '../helpers.js';
+import validation from '../validation.js';
 
-let questionsDataFunctions = {
+let questionDataFunctions = {
     // get all the questions in the questions collection
     async getAllQuestions() {
         const questionCollection = await questions();
@@ -72,7 +72,7 @@ let questionsDataFunctions = {
     }   
 };
 
-export default questionsDataFunctions;
+export default questionDataFunctions;
 
 /*
 we can ignore these for now. These are some functions I made I thought we would need but they may not actually be necessary.

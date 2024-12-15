@@ -1,6 +1,6 @@
 import { topics } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
-import validation from '../helpers.js';
+import validation from '../validation.js';
 
 let topicDataFunctions = {
     // get all the topics in the subjects collection

@@ -2,6 +2,7 @@ import { users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import validation from '../validation.js';
 import bcrypt from 'bcryptjs';
+import { registerUser } from '../public/js/index.js';
 
 let userDataFunctions = {
     // get all the users in the users collection
@@ -21,28 +22,26 @@ let userDataFunctions = {
     },
 
     // create a new user 
-    async signUpUser(
+    async registerUser(
         firstName,
         lastName,
-        userId,
         email,
         userName,
-        password,
-        quizzes
+        password
     ) {
         // error checking for firstName
         firstName = validation.checkString(firstName, 'First name');
         for (let x of firstName) {  // check whether it has numbers (throw an error if yes)
-            if (Number.isInteger(x)) {
-                throw 'Error: First name cannot contain numbers.'
+            if (!isNaN(x)) {
+                throw 'Error: First name cannot contain numbers.';
             }
         }
 
         // error checking for lastName
         lastName = validation.checkString(lastName, 'Last name');
         for (let x of lastName) {  // check whether it has numbers (throw an error if yes)
-            if (Number.isInteger(x)) {
-                throw 'Error: Last name cannot contain numbers.'
+            if (!isNaN(x)) {
+                throw 'Error: Last name cannot contain numbers.';
             }
         }
 
@@ -61,16 +60,16 @@ let userDataFunctions = {
 
         // error checking for password
         password = validation.checkString(password, 'Password');
-        for (let x of password) {  // check whether it has spaces (throw an error if yes)
-            if (x === ' ') {
-                throw 'Error: Password cannot have empty spaces.'
-            }
-        }
-        if (password.length < 8) { // check is the length is invalid (throw an error if yes)
-            throw 'Error: Password must be at least 8 characters long.';
-        }
+        // for (let x of password) {  // check whether it has spaces (throw an error if yes)
+        //     if (x === ' ') {
+        //         throw 'Error: Password cannot have empty spaces.'
+        //     }
+        // }
+        // if (password.length < 8) { // check is the length is invalid (throw an error if yes)
+        //     throw 'Error: Password must be at least 8 characters long.';
+        // }
 
-        /*******************error checking end******************/
+        // /*******************error checking end******************/
 
         // hash password using bcrypt
         const saltRounds = 16;
@@ -80,76 +79,68 @@ let userDataFunctions = {
         let newUser = {
             firstName: firstName,
             lastName: lastName,
-            userId: new ObjectId(),
-            email: email,
             userName: userName,
+            email: email,
+            password: password,
             quizzes: []
         };
 
-        let res = { registrationCompleted: false }; // this object will tell use if the registration was successful or not
-        userCollection = await users();
-        const insertInfo = await userCollection.insertOne(newUser); // insert new user info into the collection
+        let result = { registrationCompleted: false };
+
+        const insertInfo = await usersCollection.insertOne(newUser); // insert new user info into the collection
         if (!insertInfo.acknowledged || !insertInfo.insertedId) { // check if the insertInfo is acknowledged, and if the insertedId exists
             throw 'Could not add user'; // if either condition is met, then the user cannot be added
         }
-        else {
-            res.registrationCompleted = true; // otherwise, return that it's successful
-        }
+        result.registrationCompleted = true; // otherwise, return that it's successful
 
-
-        // we need to choose whether we return a status report or the new user itself    
-        // const newUserId = insertInfo.insertedId.toString(); // turn the new user's id into a string
-
-        // const user = await this.getUserById(newUserId); // find the user that was just added
-
-        return res; // return whether the registration is successful or not
+        return result; // return whether the registration is successful or not
     },
 
     async signInUser(email, password) {
-        // error checking for email
-        email = validation.checkString(email, 'Email');
+        // email handling
         // html input type will check that it's a valid email, should we do checking here too? 
-
-        // error checking for password
-        password = validation.checkString(password, 'Password');
-        for (let x of password) {  // check whether it has spaces (throw an error if yes)
-            if (x === ' ') {
-                throw 'Error: Password cannot have empty spaces.'
-            }
-        }
-        if (password.length < 8) { // check is the length is invalid (throw an error if yes)
-            throw 'Error: Password must be at least 8 characters long.';
-        }
-
-        /*******************error checking end******************/
+        email = validation.checkString(email, 'Email');
 
         // find user by their email
         const userCollection = await users();
         const user = await userCollection.findOne(
             { "email": email }
         );
-        if (user === null) throw 'User with that email not found';
+        if (user === null) { // if there isn't a user in the DB w/ that userId, then that userId does not exist
+            throw 'Error: No user found with that email.';
+        }
 
         // error checking for password
+        password = validation.checkString(password, 'Password');
+
         // if email supplied is found in the DB, use bcrypt to compare the hashed password in the database w/ password input parameter
-        let compareToMatch = await bcrypt.compare(password, user.hash);
+        let compareToMatch = await bcrypt.compare(password, user.password);
         if (!compareToMatch) {
             throw 'Either the email or password is invalid';
         }
 
-        return user; // return the user
-    },
-
-    // delete user
-    async deleteUser(userId) {
-        userId = validation.checkId(userId);
-        const userCollection = await users();
-        const deletionInfo = await userCollection.findOneAndDelete({
-            _id: new ObjectId(userId)
-        });
-        if (!deletionInfo) throw 'Error: Could not delete user with id of ${userId}.';
-        return { ...deletionInfo, deleted: true }; // return an object of which user is deleted and the deletion status
+        // object for all user fields besides the password
+        let res = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+            quizzes: user.quizzes
+        };
+        
+        return res; // return the user
     }
+
+    // // delete user
+    // async deleteUser(userId) {
+    //     userId = validation.checkId(userId);
+    //     const userCollection = await users();
+    //     const deletionInfo = await userCollection.findOneAndDelete({
+    //         _id: new ObjectId(userId)
+    //     });
+    //     if (!deletionInfo) throw 'Error: Could not delete user with id of ${userId}.';
+    //     return { ...deletionInfo, deleted: true }; // return an object of which user is deleted and the deletion status
+    // }
 };
 
 export default userDataFunctions;
