@@ -1,0 +1,37 @@
+<div class="dashboard">
+    <h1>Quiz Dashboard</h1>
+    
+    <div class="search-section">
+        <input type="text" id="quiz-search" placeholder="Search quizzes..." class="search-input">
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="quiz-categories">
+            <h2>Categories</h2>
+            <ul>
+                <li><a href="#" data-category="all">All Quizzes</a></li>
+                <li><a href="#" data-category="math">Mathematics</a></li>
+                <li><a href="#" data-category="science">Science</a></li>
+                <li><a href="#" data-category="history">History</a></li>
+                <li><a href="#" data-category="programming">Programming</a></li>
+            </ul>
+        </div>
+
+        <div class="quiz-list" id="quiz-container">
+            {{#each quizzes}}
+            <div class="quiz-card">
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+                <div class="quiz-meta">
+                    <span>Questions: {{this.questionCount}}</span>
+                    <span>Category: {{this.category}}</span>
+                </div>
+                <div class="quiz-actions">
+                    <button onclick="startQuiz('{{this._id}}')" class="btn-primary">Take Quiz</button>
+                    <button onclick="saveForLater('{{this._id}}')" class="btn-secondary">Save for Later</button>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
