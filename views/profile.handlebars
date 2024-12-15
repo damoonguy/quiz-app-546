@@ -1,0 +1,86 @@
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>{{user.username}}'s Profile</h1>
+        <a href="/user" class="btn-secondary">Back to Dashboard</a>
+    </div>
+
+    <div class="profile-stats">
+        <div class="stat-card">
+            <h3>Quizzes Taken</h3>
+            <p>{{user.quizzesTaken}}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Average Score</h3>
+            <p>{{user.averageScore}}%</p>
+        </div>
+        <div class="stat-card">
+            <h3>Completed Today</h3>
+            <p>{{user.todayQuizzes}}</p>
+        </div>
+        <div class="stat-card badge-card">
+            <h3>Badge</h3>
+            <div class="badge-display">
+                {{#if user.quizzesTaken}}
+                    {{#if user.isMaster}}
+                        <div class="badge">
+                            👑 Master of Learning (25+ Quizzes)
+                        </div>
+                    {{else}}
+                        {{#if user.isPro}}
+                            <div class="badge">
+                                ⭐ Study G.O.A.T (10+ Quizzes)
+                            </div>
+                        {{else}}
+                            <div class="badge">
+                                🎯 Quiz Noob (First Quiz)
+                            </div>
+                        {{/if}}
+                    {{/if}}
+                {{else}}
+                    <p>Take a quiz to earn the first badge</p>
+                {{/if}}
+            </div>
+        </div>
+        <div class="stat-card description-card">
+            <h3>About Me</h3>
+            <div id="description-display" {{#if editing}}style="display: none;"{{/if}}>
+                <p id="description-text">{{user.description}}</p>
+                <button onclick="toggleDescriptionEdit()" class="btn-secondary">Edit Description</button>
+            </div>
+            <div id="description-edit" style="display: none;">
+                <textarea id="description-input" class="description-textarea">{{user.description}}</textarea>
+                <div class="button-group">
+                    <button onclick="saveDescription()" class="btn-primary">Save</button>
+                    <button onclick="cancelEdit()" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+        <a href="/change-password" class="btn-primary">Change Password</a>
+    </div>
+
+    <div id="password-change-form" style="display: none;" class="password-change-section">
+        <h3>Change Password</h3>
+        <div class="form-group">
+            <label for="current-password">Current Password:</label>
+            <input type="password" id="current-password" required>
+        </div>
+        <div class="form-group">
+            <label for="new-password">New Password:</label>
+            <input type="password" id="new-password" required>
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirm New Password:</label>
+            <input type="password" id="confirm-password" required>
+        </div>
+        <div class="button-group">
+            <button onclick="changePassword()" class="btn-primary">Update Password</button>
+            <button onclick="togglePasswordChange()" class="btn-secondary">Cancel</button>
+        </div>
+        <div id="password-error" class="error-message" style="display: none;"></div>
+    </div>
+</div>
+
+<script src="/public/js/profile.js"></script> 

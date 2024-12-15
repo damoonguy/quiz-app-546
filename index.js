@@ -1,4 +1,3 @@
-// index.js
 import express from 'express';
 import { engine } from 'express-handlebars';
 import session from 'express-session';
@@ -11,27 +10,24 @@ const __dirname = dirname(__filename);
 
 const app = express();
 
-// Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.use('/public', express.static('public'));
 
-// Session setup
 app.use(
     session({
         name: 'QuizAppSession',
-        secret: 'some secret string!',
+        secret: 'secrets',
         resave: false,
         saveUninitialized: false
     })
 );
 
-// Handlebars setup
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
-// Build routes
 buildRoutes(app);
 
 const port = 3000;

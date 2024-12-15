@@ -70,3 +70,47 @@ const searchQuizzes = async (searchTerm) => {
   });
   
   let searchTimeout = null;
+  
+  async function saveForLater(quizId) {
+    try {
+        const response = await fetch('/quiz/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ quizId })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save quiz');
+        }
+
+        alert('Quiz saved successfully!');
+    } catch (error) {
+        console.error('Error saving quiz:', error);
+        alert('Failed to save quiz');
+    }
+  }
+  
+  async function removeSaved(quizId) {
+    try {
+        const response = await fetch('/quiz/unsave', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ quizId })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to remove quiz');
+        }
+
+        // Refresh the page to update the saved quizzes section
+        window.location.reload();
+    } catch (error) {
+        console.error('Error removing quiz:', error);
+        alert('Failed to remove quiz');
+    }
+  }
+  
