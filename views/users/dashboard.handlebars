@@ -23,52 +23,7 @@
         </div>
     </div>
 
-    <!-- Created Quizzes Section -->
-    <section class="created-section">
-        <h2>My Created Quizzes</h2>
-        <div class="created-grid">
-            {{#each createdQuizzes}}
-            <div class="quiz-card">
-                <h3>{{this.title}}</h3>
-                <p>{{this.description}}</p>
-                <div class="quiz-meta">
-                    <span>Questions: {{this.questionCount}}</span>
-                    <span>Category: {{this.category}}</span>
-                    <span>Times Taken: {{this.timesTaken}}</span>
-                </div>
-                <div class="quiz-actions">
-                    <button class="btn-primary" onclick="window.location.href='/quiz/{{this._id}}/review'">Review
-                        Quiz</button>
-                    <button class="btn-danger" onclick="deleteQuiz('{{this._id}}')">Delete Quiz</button>
-                </div>
-            </div>
-            {{else}}
-            <div class="no-created">
-                <p>You haven't created any quizzes yet. <a href="/quiz/create">Create one now!</a></p>
-            </div>
-            {{/each}}
-        </div>
-    </section>
-
     <div class="dashboard-sections">
-        <!-- Leaderboard Section -->
-        <section class="leaderboard-section">
-            <h2>Leaderboard</h2>
-            <div class="leaderboard-grid">
-                {{#each leaderboard}}
-                <div class="leaderboard-card">
-                    <div class="rank">{{add @index 1}}</div>
-                    <div class="user-info">
-                        <span class="username">{{this.username}}</span>
-                        <span class="score">{{this.averageScore}}%</span>
-                    </div>
-                </div>
-                {{else}}
-                <div class="no-leaders">No quiz results yet</div>
-                {{/each}}
-            </div>
-        </section>
-
         <!-- Available Quizzes Section -->
         <section class="quiz-section">
             <h2>Available Quizzes</h2>
@@ -84,7 +39,6 @@
                     <div class="quiz-meta">
                         <span>Questions: {{this.questionCount}}</span>
                         <span>Category: {{this.category}}</span>
-                        <span>Created by: {{this.creator}}</span>
                     </div>
                     <div class="quiz-actions">
                         <button class="btn-primary" onclick="window.location.href='/quiz/{{this._id}}'">Take

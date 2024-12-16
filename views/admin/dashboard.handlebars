@@ -17,54 +17,35 @@
             <p>{{stats.activeToday}}</p>
         </div>
         <div class="stat-card">
-            <h3>Quizzes Taken Today</h3>
+            <h3>Quizzes Today</h3>
             <p>{{stats.quizzesToday}}</p>
         </div>
     </div>
     <section class="admin-section">
         <h2>User Management</h2>
-        <div class="search-bar">
-            <input type="text" placeholder="Search users..." id="user-search">
-        </div>
-        <div class="user-list">
+        <div class="user-list users-grid">
             {{#each users}}
-            <div class="user-card">
+            <div class="stat-card user-card" data-user-id="{{this._id}}">
                 <div class="user-info">
                     <h3>{{this.username}}</h3>
                     <p>{{this.email}}</p>
                 </div>
                 <div class="user-stats">
-                    <span>Quizzes: {{this.quizzesTaken}}</span>
-                    <span>Avg Score: {{this.averageScore}}%</span>
+                    <div class="stat">
+                        <span class="label">Quizzes Taken:</span>
+                        <span class="value">{{this.quizzesTaken}}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Average Score:</span>
+                        <span class="value">{{this.averageScore}}%</span>
+                    </div>
                 </div>
-                <div class="action-buttons">
-                    <button class="btn-primary" onclick="viewUser('{{this._id}}')">View Details</button>
-                    <button class="btn-warning" onclick="editUser('{{this._id}}')">Edit</button>
-                    <button class="btn-danger" onclick="deactivateUser('{{this._id}}')">Deactivate</button>
-                </div>
-            </div>
-            {{/each}}
-        </div>
-    </section>
-    <section class="admin-section">
-        <h2>Quiz Management</h2>
-        <div class="action-buttons">
-            <button class="btn-primary" onclick="createQuiz()">Create New Quiz</button>
-            <button class="btn-secondary" onclick="viewAllQuizzes()">View All Quizzes</button>
-        </div>
-        <div class="quiz-list">
-            {{#each quizzes}}
-            <div class="quiz-card">
-                <h3>{{this.title}}</h3>
-                <div class="quiz-stats">
-                    <span>Times Taken: {{this.timesTaken}}</span>
-                    <span>Avg Score: {{this.averageScore}}%</span>
-                </div>
-                <div class="action-buttons">
-                    <button class="btn-primary" onclick="editQuiz('{{this._id}}')">Edit</button>
-                    <button class="btn-danger" onclick="deleteQuiz('{{this._id}}')">Delete</button>
+                <div class="card-actions">
+                    <button class="btn-danger" onclick="banUser('{{this._id}}')">Ban User</button>
                 </div>
             </div>
+            {{else}}
+            <div class="no-results">No users found</div>
             {{/each}}
         </div>
     </section>
@@ -73,13 +54,53 @@
         <div class="reports-grid">
             <div class="report-card">
                 <h3>Popular Categories</h3>
+                <div class="category-rankings">
+                    {{#each analytics.popularCategories}}
+                    <div class="ranking-item">
+                        <span class="rank">#{{add @index 1}}</span>
+                        <span class="category">{{this.category}}</span>
+                        <span class="count">({{this.count}} quizzes)</span>
+                    </div>
+                    {{/each}}
+                </div>
             </div>
             <div class="report-card">
                 <h3>User Activity</h3>
+                <div class="activity-stats">
+                    <div class="activity-item">
+                        <span class="label">New Users (7 days):</span>
+                        <span class="value">{{analytics.userActivity.newUsers}}</span>
+                    </div>
+                    <div class="activity-item">
+                        <span class="label">New Quizzes (7 days):</span>
+                        <span class="value">{{analytics.userActivity.newQuizzes}}</span>
+                    </div>
+                    <h4>Recent Achievements</h4>
+                    <div class="achievements-list">
+                        {{#each analytics.userActivity.recentBadges}}
+                        <div class="achievement-item">
+                            <span class="username">{{this.username}}</span>
+                            <span class="badge">{{this.badge}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
             </div>
             <div class="report-card">
                 <h3>Quiz Performance</h3>
+                <div class="performance-stats">
+                    {{#each analytics.categoryPerformance}}
+                    <div class="performance-item">
+                        <span class="category">{{this.category}}</span>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: {{this.averageScore}}%"></div>
+                            <span class="score-text">{{this.averageScore}}%</span>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
             </div>
         </div>
     </section>
 </div>
+<script src="/public/js/admin/userManagement.js"></script>

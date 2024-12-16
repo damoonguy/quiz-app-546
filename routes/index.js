@@ -197,7 +197,6 @@ export const buildRoutes = (app) => {
                     category: category.trim(),
                     questions: JSON.parse(questions),
                     createdBy: req.session.user.id,
-                    creatorUsername: req.session.user.username,
                     createdAt: new Date(),
                     active: true
                 };
@@ -257,7 +256,7 @@ export const buildRoutes = (app) => {
             }
 
             const { answers } = req.body;
-
+            
             if (!Array.isArray(answers)) {
                 throw new Error('Invalid answers format');
             }
@@ -276,7 +275,7 @@ export const buildRoutes = (app) => {
             quiz.questions.forEach((question, index) => {
                 const submittedAnswer = answers[index];
                 const correctAnswer = question.correctAnswer;
-
+                
                 if (submittedAnswer === correctAnswer) {
                     score++;
                 }
@@ -513,10 +512,10 @@ export const buildRoutes = (app) => {
             if (!req.session.user) {
                 return res.status(401).json({ error: 'Not authenticated' });
             }
-
+    
             const searchTerm = req.query.term;
             const quizCollection = await quizzes();
-
+    
             let query = { active: true };
             if (searchTerm) {
                 query = {
@@ -528,9 +527,9 @@ export const buildRoutes = (app) => {
                     ]
                 };
             }
-
+    
             const searchResults = await quizCollection.find(query).toArray();
-
+            
             const formattedResults = searchResults.map(quiz => ({
                 _id: quiz._id,
                 title: quiz.title,
@@ -539,31 +538,42 @@ export const buildRoutes = (app) => {
                 category: quiz.category || 'General',
                 creator: quiz.createdBy
             }));
-
+    
             res.json(formattedResults);
         } catch (e) {
             res.status(500).json({ error: e.message });
         }
     });
 
-    app.post('/quiz/:id/delete', async (req, res) => {
+    app.get('/api/users/search', async (req, res) => {
         try {
             if (!req.session.user) {
-                return res.status(401).json({ error: 'Not logged in' });
+                return res.status(401).json({ error: 'Not authenticated' });
             }
-    
-            const quizCollection = await quizzes();
-            const quiz = await quizCollection.findOne({ 
-                _id: new ObjectId(req.params.id),
-                creatorUsername: req.session.user.username 
-            });
-    
-            if (!quiz) {
-                return res.status(404).json({ error: 'Quiz not found or unauthorized' });
+
+            const searchTerm = req.query.term || '';
+            const userCollection = await users();
+
+            let query = {};
+            if (searchTerm) {
+                query = {
+                    username: { $regex: searchTerm, $options: 'i' }
+                };
             }
-    
-            await quizCollection.deleteOne({ _id: new ObjectId(req.params.id) });
-            res.json({ success: true });
+
+            const searchResults = await userCollection
+                .find(query)
+                .limit(20)
+                .toArray();
+
+            const formattedResults = searchResults.map(user => ({
+                _id: user._id,
+                username: user.username,
+                quizzesTaken: user.quizzesTaken || 0,
+                averageScore: user.averageScore || 0
+            }));
+
+            res.json(formattedResults);
         } catch (e) {
             res.status(500).json({ error: e.message });
         }
