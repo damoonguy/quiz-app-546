@@ -1,25 +1,57 @@
 //You can add and export any helper functions you want here. If you aren't using any, then you can just leave this file as is.
-const exportedMethods = {
-    checkId(id) {
-        if (!id) throw 'Error: You must provide an userId to search for';
-        if (typeof id !== 'string') throw 'Error: userId must be a string';
-        id = id.trim();
-        if (id.length === 0)
-            throw 'Error: userId cannot be an empty string or just spaces';
-        // if (!ObjectId.isValid(id)) throw 'Error : invalid object ID';
-        return id;
-    },
+import bcrypt from 'bcryptjs';
 
-    checkString(strVal, varName) {
-        if (!strVal) throw 'Error: You must supply a ${varName}!';
-        if (typeof strVal !== 'string') throw 'Error: ${varName} must be a string!';
-        strVal = strVal.trim();
-        if (strVal.length === 0)
-            throw 'Error: ${varName} cannot be an empty string or string with just spaces';
-        if (!isNaN(strVal))
-            throw 'Error: ${strVal} is not a valid value for ${varName} as it only contains digits';
-        return strVal;
-    }
+export const validateEmail = (email) => {
+  if (!email.includes('@')) return false;
+  
+  const [localPart, domain] = email.split('@');
+  if (!localPart || !domain) return false;
+  if (!domain.includes('.')) return false;
+  
+  const parts = email.split('@');
+  if (parts.length !== 2) return false;
+  if (parts[0].includes(' ') || parts[1].includes(' ')) return false;
+  
+  return true;
 };
 
-export default exportedMethods;
+export const validatePassword = (password) => {
+  return password.length >= 8;
+};
+
+export const validateName = (name) => {
+  const trimmedName = name.trim();
+  if (trimmedName.length < 2) return false;
+  
+  const validChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ- ';
+  for (const char of trimmedName) {
+    if (!validChars.includes(char)) return false;
+  }
+  
+  return true;
+};
+
+export const validateUsername = (username) => {
+  const trimmedUsername = username.trim();
+  if (trimmedUsername.length < 3) return false;
+  
+  const validChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-';
+  for (const char of trimmedUsername) {
+    if (!validChars.includes(char)) return false;
+  }
+  
+  return true;
+};
+
+export const validateRole = (role) => {
+  return ['user', 'admin'].includes(role);
+};
+
+export const hashPassword = async (password) => {
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
+};
+
+export const comparePasswords = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
+};

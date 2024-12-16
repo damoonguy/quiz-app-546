@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{Title}}</title>
+</head>
+<body>
+    <div class="quiz-grid">
+        {{#each quizzes}}
+            <div class="quiz-card">
+                    <h3>{{this.title}}</h3>
+                    <p>{{this.description}}</p>
+                    <div class="quiz-meta">
+                        <span>Questions: {{this.questionCount}}</span>
+                        <span>Category: {{this.category}}</span>
+                        <span>Created by: {{this.creator}}</span>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn-primary" onclick="window.location.href='/quiz/{{this._id}}'">Take Quiz</button>
+                    <button class="btn-secondary" onclick="saveForLater('{{this._id}}')">Save for Later</button>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</body>
+</html>

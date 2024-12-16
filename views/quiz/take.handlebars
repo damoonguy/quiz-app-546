@@ -1,0 +1,77 @@
+<div class="quiz-container">
+    <h2>{{quiz.title}}</h2>
+    <p class="quiz-description">{{quiz.description}}</p>
+    
+    <form id="quiz-form" data-quiz-id="{{quiz._id}}">
+        <div class="questions">
+            {{#each quiz.questions}}
+            <div class="question-block">
+                <p class="question-text">{{this.question}}</p>
+                <div class="answer-options">
+                    <label>
+                        <input type="radio" name="q{{@index}}" value="true" required>
+                        True
+                    </label>
+                    <label>
+                        <input type="radio" name="q{{@index}}" value="false" required>
+                        False
+                    </label>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        
+        <button type="submit" class="btn-primary">Submit Quiz</button>
+    </form>
+
+    <div id="results" class="results-container" style="display: none;">
+        <h3>Quiz Results</h3>
+        <p>Score: <span id="score"></span>%</p>
+        <p>Correct Answers: <span id="correct-answers"></span> out of <span id="total-questions"></span></p>
+        <a href="/users" class="btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<script>
+document.getElementById('quiz-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const answers = [];
+    const questions = document.querySelectorAll('.question-block');
+    
+    questions.forEach((question, index) => {
+        const selected = question.querySelector(`input[name="q${index}"]:checked`);
+        answers.push(selected ? selected.value === 'true' : 'false');
+    });
+
+    try {
+        const response = await fetch(`/quiz/${this.dataset.quizId}/submit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ answers: answers })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        document.getElementById('score').textContent = result.score;
+        document.getElementById('correct-answers').textContent = result.correctAnswers;
+        document.getElementById('total-questions').textContent = result.totalQuestions;
+        
+        this.style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+
+    } catch (error) {
+        alert('Error submitting quiz: ' + error.message);
+    }
+});
+</script> 

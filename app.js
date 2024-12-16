@@ -17,8 +17,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use(session({
-  name: 'AuthenticationState',
-  secret: 'JAXWORLD',
+  name: 'QuizAppSession',
+  secret: 'secrets',
   resave: false,
   saveUninitialized: false
 }))
@@ -38,6 +38,9 @@ const handlebarsInstance = exphbs.create({
     },
     eq: (val1, val2) => {
       return val1 == val2;
+    },
+    add: (val1, val2) => {
+      return val1 + val2
     }
   }
 });

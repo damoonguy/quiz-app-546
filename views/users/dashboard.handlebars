@@ -1,0 +1,168 @@
+<div class="user-dashboard">
+    <div class="dashboard-header">
+        <h1>Welcome, {{user.username}}</h1>
+        <div class="header-actions">
+            <a href="/profile" class="btn-secondary">Profile</a>
+            <a href="/quiz/create" class="btn-primary">Create Quiz</a>
+            <a href="/logout" class="btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <h3>Quizzes Taken</h3>
+            <p>{{user.quizzesTaken}}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Average Score</h3>
+            <p>{{user.averageScore}}%</p>
+        </div>
+        <div class="stat-card">
+            <h3>Completed Today</h3>
+            <p>{{user.todayQuizzes}}</p>
+        </div>
+    </div>
+
+    <!-- Created Quizzes Section -->
+    <section class="created-section">
+        <h2>My Created Quizzes</h2>
+        <div class="created-grid">
+            {{#each createdQuizzes}}
+            <div class="quiz-card">
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+                <div class="quiz-meta">
+                    <span>Questions: {{this.questionCount}}</span>
+                    <span>Category: {{this.category}}</span>
+                    <span>Times Taken: {{this.timesTaken}}</span>
+                </div>
+                <div class="quiz-actions">
+                    <button class="btn-primary" onclick="window.location.href='/quiz/{{this._id}}/review'">Review
+                        Quiz</button>
+                    <button class="btn-danger" onclick="deleteQuiz('{{this._id}}')">Delete Quiz</button>
+                </div>
+            </div>
+            {{else}}
+            <div class="no-created">
+                <p>You haven't created any quizzes yet. <a href="/quiz/create">Create one now!</a></p>
+            </div>
+            {{/each}}
+        </div>
+    </section>
+
+    <div class="dashboard-sections">
+        <!-- Leaderboard Section -->
+        <section class="leaderboard-section">
+            <h2>Leaderboard</h2>
+            <div class="leaderboard-grid">
+                {{#each leaderboard}}
+                <div class="leaderboard-card">
+                    <div class="rank">{{add @index 1}}</div>
+                    <div class="user-info">
+                        <span class="username">{{this.username}}</span>
+                        <span class="score">{{this.averageScore}}%</span>
+                    </div>
+                </div>
+                {{else}}
+                <div class="no-leaders">No quiz results yet</div>
+                {{/each}}
+            </div>
+        </section>
+
+        <!-- Available Quizzes Section -->
+        <section class="quiz-section">
+            <h2>Available Quizzes</h2>
+            <div class="search-bar">
+                <input type="text" placeholder="Search quizzes..." id="quiz-search">
+                <button class="btn-primary" id="search-button">Search</button>
+            </div>
+            <div class="quiz-grid">
+                {{#each availableQuizzes}}
+                <div class="quiz-card">
+                    <h3>{{this.title}}</h3>
+                    <p>{{this.description}}</p>
+                    <div class="quiz-meta">
+                        <span>Questions: {{this.questionCount}}</span>
+                        <span>Category: {{this.category}}</span>
+                        <span>Created by: {{this.creator}}</span>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn-primary" onclick="window.location.href='/quiz/{{this._id}}'">Take
+                            Quiz</button>
+                        <button class="btn-secondary" onclick="saveForLater('{{this._id}}')">Save for Later</button>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <h2>Your Progress</h2>
+            <div class="progress-grid">
+                {{#each inProgressQuizzes}}
+                <div class="progress-card">
+                    <h3>{{this.title}}</h3>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: {{this.progress}}%"></div>
+                    </div>
+                    <button class="btn-primary" onclick="continueQuiz('{{this._id}}')">Continue</button>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+
+        <!-- Saved Quizzes Section -->
+        <section class="saved-section">
+            <h2>Saved Quizzes</h2>
+            <div class="saved-grid">
+                {{#each savedQuizzes}}
+                <div class="quiz-card">
+                    <h3>{{this.title}}</h3>
+                    <p>{{this.description}}</p>
+                    <div class="quiz-meta">
+                        <span>Questions: {{this.questionCount}}</span>
+                        <span>Category: {{this.category}}</span>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn-primary" onclick="window.location.href='/quiz/{{this._id}}'">Take
+                            Quiz</button>
+                        <button class="btn-danger" onclick="removeSaved('{{this._id}}')">Remove</button>
+                    </div>
+                </div>
+                {{else}}
+                <div class="no-saved">
+                    <p>No saved quizzes yet. Save some quizzes to take later!</p>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+
+        <!-- Recent Results Section -->
+        <section class="results-section">
+            <h2>Recent Results</h2>
+            <div class="results-grid">
+                {{#each recentResults}}
+                <div class="stat-card result-card">
+                    <h3>{{this.quizTitle}}</h3>
+                    <div class="result-details">
+                        <div class="score-display">
+                            <span class="score">{{this.score}}%</span>
+                        </div>
+                        <p class="date">Taken on {{this.date}}</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-secondary" onclick="window.location.href='/quiz/{{this.quizId}}/review'">
+                            Review Quiz
+                        </button>
+                    </div>
+                </div>
+                {{else}}
+                <div class="no-results">
+                    <p>No quizzes completed yet</p>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+    </div>
+</div>

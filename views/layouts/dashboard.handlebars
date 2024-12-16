@@ -5,22 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
     <link rel="stylesheet" href="/public/css/dashboard.css">
+    <script src="/public/js/index.js"></script>
 </head>
 <body>
     <!-- Top Bar -->
-    <span class="top-bar">
-      <input type="text" placeholder="Search..." class="search-bar" />
-      <button class="profile-settings">Profile Settings</button>
-
-      <a href="/auth/logout">Logout</a>
-
-    </span>
     <div class="dashboard-layout">
         <main>
             {{{body}}}
         </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!--<script src="/js/dashboard.js"></script> -->
+    
 </body>
 </html>

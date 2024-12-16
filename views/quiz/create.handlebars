@@ -1,0 +1,142 @@
+<div class="create-quiz-container">
+    <div class="quiz-header">
+        <h2>Create New Quiz</h2>
+        <a href="/users" class="btn-secondary">Back to Dashboard</a>
+    </div>
+    <form id="quiz-form" method="POST" action="/quiz/create">
+        <div class="form-group">
+            <label for="title">Quiz Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="">Select a category</option>
+                <option value="math">Mathematics</option>
+                <option value="science">Science</option>
+                <option value="history">History</option>
+                <option value="programming">Programming</option>
+                <option value="general">General Knowledge</option>
+            </select>
+        </div>
+
+        <div id="questions-container">
+        </div>
+
+        <input type="hidden" id="questions" name="questions" value="[]">
+        
+        <button type="button" class="btn-secondary" onclick="addQuestion()">Add Question</button>
+        <button type="submit" class="btn-primary">Create Quiz</button>
+    </form>
+</div>
+
+<script>
+let questionCount = 0;
+
+function addQuestion() {
+    const container = document.getElementById('questions-container');
+    const questionDiv = document.createElement('div');
+    questionDiv.className = 'question-block';
+
+    const questionGroup = document.createElement('div');
+    questionGroup.className = 'form-group';
+
+    const questionLabel = document.createElement('label');
+    questionLabel.textContent = `Question ${questionCount + 1}:`;
+
+    const questionInput = document.createElement('input');
+    questionInput.type = 'text';
+    questionInput.className = 'question-text';
+    questionInput.required = true;
+    questionInput.addEventListener('input', updateQuestions);
+
+    const answerGroup = document.createElement('div');
+    answerGroup.className = 'form-group';
+
+    const answerLabel = document.createElement('label');
+    answerLabel.textContent = 'Answer:';
+
+    const answerSelect = document.createElement('select');
+    answerSelect.className = 'question-answer';
+    answerSelect.required = true;
+    answerSelect.addEventListener('change', updateQuestions);
+
+    const trueOption = document.createElement('option');
+    trueOption.value = 'true';
+    trueOption.textContent = 'True';
+
+    const falseOption = document.createElement('option');
+    falseOption.value = 'false';
+    falseOption.textContent = 'False';
+
+    const explanationGroup = document.createElement('div');
+    explanationGroup.className = 'form-group';
+
+    const explanationLabel = document.createElement('label');
+    explanationLabel.textContent = 'Explanation:';
+
+    const explanationInput = document.createElement('textarea');
+    explanationInput.className = 'question-explanation';
+    explanationInput.placeholder = 'Explain why this answer is correct...';
+    explanationInput.addEventListener('input', updateQuestions);
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'btn-danger';
+    removeButton.textContent = 'Remove';
+    removeButton.addEventListener('click', function() {
+        questionDiv.remove();
+        updateQuestions();
+    });
+
+    answerSelect.appendChild(trueOption);
+    answerSelect.appendChild(falseOption);
+
+    questionGroup.appendChild(questionLabel);
+    questionGroup.appendChild(questionInput);
+    answerGroup.appendChild(answerLabel);
+    answerGroup.appendChild(answerSelect);
+    explanationGroup.appendChild(explanationLabel);
+    explanationGroup.appendChild(explanationInput);
+
+    questionDiv.appendChild(questionGroup);
+    questionDiv.appendChild(answerGroup);
+    questionDiv.appendChild(explanationGroup);
+    questionDiv.appendChild(removeButton);
+
+    container.appendChild(questionDiv);
+    questionCount++;
+    updateQuestions();
+}
+
+function updateQuestions() {
+    const questions = [];
+    document.querySelectorAll('.question-block').forEach((block, index) => {
+        const questionText = block.querySelector('.question-text').value;
+        const answerValue = block.querySelector('.question-answer').value;
+        const explanationText = block.querySelector('.question-explanation').value;
+        
+        questions.push({
+            question: questionText,
+            correctAnswer: answerValue === 'true',
+            explanation: explanationText,
+            type: 'true-false'
+        });
+    });
+    document.getElementById('questions').value = JSON.stringify(questions);
+}
+
+document.getElementById('quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    updateQuestions();
+    this.submit();
+});
+
+document.addEventListener('DOMContentLoaded', addQuestion);
+</script> 

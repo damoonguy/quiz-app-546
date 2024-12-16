@@ -59,6 +59,12 @@
   margin-top: 20px;
 }
 
+.header-actions > * {
+  display: flex;
+  flex-direction: row;
+  max-width: 100px;
+}
+
 .search-bar input {
   width: 100%;
   padding: 10px;
