@@ -96,13 +96,9 @@
                 {{#each recentResults}}
                 <div class="result-card">
                     <h3>{{this.quizTitle}}</h3>
-                    <div class="result-details">
-                        <span class="score">Score: {{this.score}}%</span>
-                        <span class="date">{{this.date}}</span>
-                    </div>
-                    <div class="result-actions">
-                        <button class="btn-secondary" onclick="reviewQuiz('{{this._id}}')">Review Quiz</button>
-                    </div>
+                    <p>Score: {{this.score}}%</p>
+                    <p>Date: {{this.date}}</p>
+                    <button class="btn-secondary" onclick="window.location.href='/quiz/{{this.quizId}}/review'">Review Quiz</button>
                 </div>
                 {{else}}
                 <div class="no-results">

@@ -1,0 +1,29 @@
+<div class="review-container">
+    <div class="quiz-header">
+        <h2>{{quiz.title}}</h2>
+        <p class="quiz-description">{{quiz.description}}</p>
+    </div>
+
+    <div class="questions-review">
+        {{#each quiz.questions}}
+        <div class="question-review">
+            <h3 class="question-text">Question {{add @index 1}}</h3>
+            <p>{{this.question}}</p>
+            
+            <div class="answer-section">
+                <h4>Correct Answer:</h4>
+                <p class="correct-answer">{{this.correctAnswer}}</p>
+            </div>
+
+            <div class="explanation-box">
+                <h5>Explanation:</h5>
+                <p>{{this.explanation}}</p>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="review-actions">
+        <a href="/user" class="btn-secondary">Back to Dashboard</a>
+    </div>
+</div>

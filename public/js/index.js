@@ -105,9 +105,7 @@ const searchQuizzes = async (searchTerm) => {
         if (!response.ok) {
             throw new Error('Failed to remove quiz');
         }
-
-        // Refresh the page to update the saved quizzes section
-        window.location.reload();
+        window.location.reload(); // refresh
     } catch (error) {
         console.error('Error removing quiz:', error);
         alert('Failed to remove quiz');

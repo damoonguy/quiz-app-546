@@ -24,7 +24,13 @@ app.use(
     })
 );
 
-app.engine('handlebars', engine());
+app.engine('handlebars', engine({
+    helpers: {
+        add: function(value, addition) {
+            return value + addition;
+        }
+    }
+}));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 

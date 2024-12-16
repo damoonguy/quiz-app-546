@@ -72,6 +72,17 @@ function addQuestion() {
     falseOption.value = 'false';
     falseOption.textContent = 'False';
 
+    const explanationGroup = document.createElement('div');
+    explanationGroup.className = 'form-group';
+
+    const explanationLabel = document.createElement('label');
+    explanationLabel.textContent = 'Explanation:';
+
+    const explanationInput = document.createElement('textarea');
+    explanationInput.className = 'question-explanation';
+    explanationInput.placeholder = 'Explain why this answer is correct...';
+    explanationInput.addEventListener('input', updateQuestions);
+
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.className = 'btn-danger';
@@ -88,9 +99,12 @@ function addQuestion() {
     questionGroup.appendChild(questionInput);
     answerGroup.appendChild(answerLabel);
     answerGroup.appendChild(answerSelect);
+    explanationGroup.appendChild(explanationLabel);
+    explanationGroup.appendChild(explanationInput);
 
     questionDiv.appendChild(questionGroup);
     questionDiv.appendChild(answerGroup);
+    questionDiv.appendChild(explanationGroup);
     questionDiv.appendChild(removeButton);
 
     container.appendChild(questionDiv);
@@ -103,10 +117,12 @@ function updateQuestions() {
     document.querySelectorAll('.question-block').forEach((block, index) => {
         const questionText = block.querySelector('.question-text').value;
         const answerValue = block.querySelector('.question-answer').value;
+        const explanationText = block.querySelector('.question-explanation').value;
         
         questions.push({
             question: questionText,
             correctAnswer: answerValue === 'true',
+            explanation: explanationText,
             type: 'true-false'
         });
     });
