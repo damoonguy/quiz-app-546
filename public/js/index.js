@@ -85,7 +85,7 @@ const searchQuizzes = async (searchTerm) => {
             throw new Error('Failed to save quiz');
         }
 
-        alert('Quiz saved successfully!');
+        alert('Quiz saved successfully, please refresh the page!');
     } catch (error) {
         console.error('Error saving quiz:', error);
         alert('Failed to save quiz');
