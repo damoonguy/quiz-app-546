@@ -10,7 +10,9 @@ body {
     padding: 20px;
 }
 
-.btn-primary, .btn-secondary, .btn-danger {
+.btn-primary,
+.btn-secondary,
+.btn-danger {
     padding: 8px 16px;
     border: none;
     cursor: pointer;
@@ -41,19 +43,23 @@ body {
     margin-bottom: 5px;
 }
 
-.form-group input, .form-group select,.form-group textarea {
+.form-group input,
+.form-group select,
+.form-group textarea {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
 }
 
-.quiz-card, .user-card, .stat-card {
+.quiz-card,
+.user-card,
+.stat-card {
     border: 1px solid #ddd;
     padding: 15px;
     margin-bottom: 15px;
 }
 
-.quiz-grid, .dashboard-stats {
+.dashboard-stats {
     display: grid;
     gap: 15px;
     margin: 15px 0;
@@ -66,10 +72,12 @@ body {
     margin: 10px 0;
 }
 
-h1, h2, h3 {
-  margin-bottom: 15px;
+h1,
+h2,
+h3 {
+    margin-bottom: 15px;
 }
-  
+
 section {
     margin-bottom: 30px;
 }
@@ -88,7 +96,7 @@ section {
 }
 
 .question-text {
-    font-size: 1.1em;
+    font-size: 1.125rem;
     margin-bottom: 15px;
 }
 
@@ -109,11 +117,6 @@ section {
     padding: 20px;
     background: #f5f5f5;
     border-radius: 5px;
-}
-
-.quiz-description {
-    margin-bottom: 20px;
-    color: #666;
 }
 
 .profile-container {
@@ -211,11 +214,6 @@ section {
     border-radius: 5px;
 }
 
-.question-text {
-    font-size: 1.1em;
-    margin-bottom: 15px;
-}
-
 .answer-section {
     background: #f5f5f5;
     padding: 10px;
@@ -245,7 +243,16 @@ section {
 }
 
 .quiz-header {
-    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.create-quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .quiz-header h2 {
@@ -255,4 +262,150 @@ section {
 
 .quiz-description {
     color: #666;
+}
+
+.quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.no-results {
+    text-align: center;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    grid-column: 1 / -1;
+    color: #666;
+}
+
+#search-button {
+    display: none;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.result-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: transform 0.2s;
+}
+
+.result-card:hover {
+    transform: translateY(-2px);
+}
+
+.result-card h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.125rem;
+}
+
+.result-details {
+    margin: 10px 0;
+}
+
+.score-display {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.score {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.date {
+    color: #666;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.card-actions {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    color: #666;
+}
+
+.leaderboard-section {
+    margin-top: 20px;
+}
+
+.leaderboard-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    background: #f8f9fa;
+}
+
+.rank {
+    margin-right: 15px;
+    color: #666;
+}
+
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.no-leaders {
+    text-align: center;
+    padding: 10px;
+    color: #666;
+}
+
+.quiz-meta span {
+    margin-right: 15px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.quiz-meta span:last-child {
+    margin-right: 0;
+}
+
+.created-section {
+    margin-top: 30px;
+}
+
+.created-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.no-created {
+    text-align: center;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    grid-column: 1 / -1;
+    color: #666;
+}
+
+.no-created a {
+    color: #28a745;
+    text-decoration: none;
+}
+
+.no-created a:hover {
+    text-decoration: underline;
 }

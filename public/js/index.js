@@ -112,3 +112,95 @@ const searchQuizzes = async (searchTerm) => {
     }
   }
   
+  async function deleteQuiz(quizId) {
+    if (!confirm('Are you sure you want to delete this quiz? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/quiz/${quizId}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete quiz');
+        }
+
+        window.location.reload();
+    } catch (error) {
+        console.error('Error deleting quiz:', error);
+        alert('Failed to delete quiz');
+    }
+}
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('quiz-search');
+    const searchButton = document.getElementById('search-button');
+
+    if (searchButton && searchInput) {
+        let debounceTimeout;
+
+        const performSearch = async () => {
+            try {
+                const searchTerm = searchInput.value.trim();
+                const response = await fetch(`/api/quizzes/search?term=${encodeURIComponent(searchTerm)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Search failed');
+                }
+
+                const quizzes = await response.json();
+                const quizGrid = document.querySelector('.quiz-grid');
+                
+                if (!quizGrid) return;
+                
+                quizGrid.innerHTML = '';
+
+                if (quizzes.length === 0) {
+                    quizGrid.innerHTML = '<div class="no-results">No quizzes found</div>';
+                    return;
+                }
+
+                quizzes.forEach(quiz => {
+                    const quizCard = document.createElement('div');
+                    quizCard.className = 'quiz-card';
+                    quizCard.innerHTML = `
+                        <h3>${quiz.title}</h3>
+                        <p>${quiz.description}</p>
+                        <div class="quiz-meta">
+                            <span>Questions: ${quiz.questionCount}</span>
+                            <span>Category: ${quiz.category}</span>
+                        </div>
+                        <div class="quiz-actions">
+                            <button class="btn-primary" onclick="window.location.href='/quiz/${quiz._id}'">Take Quiz</button>
+                            <button class="btn-secondary" onclick="saveForLater('${quiz._id}')">Save for Later</button>
+                        </div>
+                    `;
+                    quizGrid.appendChild(quizCard);
+                });
+            } catch (error) {
+                console.error('Search error:', error);
+                alert('Failed to search quizzes');
+            }
+        };
+        searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(performSearch, 300);
+        });
+
+        searchButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            performSearch();
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
+            }
+        });
+    }
+});
