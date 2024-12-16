@@ -2,7 +2,6 @@
 // Note: please do not forget to export the router!
 
 import {Router} from 'express'
-import userAuth from "../data/users.js"
 
 const router = Router();
 
@@ -10,9 +9,9 @@ router.route('/')
   .get(async (req, res) => {
     try {
       if (req.session.user) {
-        res.render('home.handlebars', {user: req.session.user})
+        res.render('home.handlebars', {title: 'Home', user: req.session.user})
       } else {
-        res.render('home.handlebars')
+        res.redirect('/');
       }
       
     } catch (e) {
@@ -20,61 +19,26 @@ router.route('/')
     }
 })
 
-router.route('/login').get(async (req, res) => {
-  try {
-    res.render('login.handlebars', {layout: false}) 
-  } catch (e) {
-    res.status(500).json({error: e});
-  }
-}).post(async (req, res) => {
-  try {
-      const {email, password} = req.body
-      if (!email || !password) throw "All inputs must be specified";
-
-      // Will return user: object
-      req.session.user = await userAuth.signInUser(email, password);
-      if (!req.session.user) {
-          throw "Login failure."
-      }
-
-      if (req.session.user.role === 'admin') {
-        return res.redirect('/admin')
+router.route('/dashboard')
+  .get(async (req, res) => {
+    try {
+      if (req.session.user) {
+        res.render('userDashboard', {
+          layout: 'dashboard',
+          title: 'User Dashboard',
+          users: req.session.user
+        });
       } else {
-        return res.redirect('/')
-      }
-  } catch (e) {
-      return res.status(500).json({message: "something went terribly wrong.", error: e})
-  }
-})
-
-router.route('/register').get(async (req, res) => {
-  try {
-      res.render('register.handlebars', {layout: false})
-  } catch (e) {
-      res.status(500).json({error: e});
-  }
-}).post(async (req, res) => {
-  try {
-      console.log('POST /register', req.body)
-      const {firstName, lastName, email, userName, password, role} = req.body
-      if (!firstName || !lastName || !email || !userName || !password || !role) throw "All inputs must be specified";
-      // Will return {user: object, registrationCompleted: boolean}
-      const authRes = await userAuth.signUpUser(firstName, lastName, email, userName, password, role);
-      if (authRes.registrationCompleted !== true) {
-          throw "Sign up failure."
+        res.redirect('/')
       }
       
-      req.session.user = authRes.user
-
-      if (req.session.user.role === 'admin') {
-        return res.redirect('/admin')
-      } else {
-        return res.redirect('/')
-      }
-  } catch (e) {
-      return res.status(500).json({message: "something went terribly wrong.", error: e})
-  }
-})
+    } catch (e) {
+      res.status(500).render('error', {
+        title: 'Error',
+        error: e.message
+      });
+    }
+  })
 
 export default router;
 

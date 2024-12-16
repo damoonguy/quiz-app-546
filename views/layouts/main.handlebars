@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="public/css/index.css">
+    <link rel="stylesheet" href="/public/css/index.css">
     <title>Document</title>
 </head>
 <body>
@@ -13,10 +13,14 @@
       <input type="text" placeholder="Search..." class="search-bar" />
       <button class="profile-settings">Profile Settings</button>
       {{#if user}}
-        <button>My Profile</button>
+        {{#if (eq user.role 'admin')}}
+        <button><a href="/admin/dashboard">Admin Dashboard</a></button>
+        {{else}}
+        <button><a href="/users/dashboard">My Dashboard</a></button>
+        {{/if}}
       {{else}}
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+        <a href="/auth/login">Login</a>
+        <a href="/auth/register">Register</a>
       {{/if}}
     </span>
     
@@ -26,8 +30,8 @@
       <aside class="sidebar">
         <ul class="misc-items">
           <!-- User and Admin Dashboards here for now -->
-          <li><a href="/dashboard/user">User Dashboard</a></li>
-          <li><a href="/dashboard/admin">Admin Dashboard</a></li>
+          <li><a href="/users/dashboard">User Dashboard</a></li>
+          <li><a href="/admin/dashboard">Admin Dashboard</a></li>
           <li><a href="#">Item 1</a></li>
           <li><a href="#">Item 2</a></li>
           <li><a href="#">Item 3</a></li>

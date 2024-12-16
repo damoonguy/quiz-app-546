@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/register.css">
+    <link rel="stylesheet" href="/public/css/register.css">
     <title>Login</title>
 </head>
 <body>
     <div class="registration-page">
     <h1>Login</h1>
     <div>{{errorMsg}}</div>
-    <form class="registration-form" method="POST" action="/login">
+    <form class="registration-form" method="POST" action="/auth/login">
         
         <div class="form-group">
             <label for="email">Email</label>
@@ -27,7 +27,7 @@
             <button type="submit" class="btn-submit">Login</button>
         </div>
     </form>
-    <p>Not a member? <a href="/register">Register here</a></p>
+    <p>Not a member? <a href="/auth/register">Register here</a></p>
     </div>
 </body>
 </html>

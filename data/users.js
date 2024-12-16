@@ -37,7 +37,6 @@ let userDataFunctions = {
                 throw 'Error: First name cannot contain numbers.'
             }
         }
-        console.log(firstName)
 
         // error checking for lastName
         lastName = validation.checkString(lastName, 'Last name');
@@ -46,14 +45,11 @@ let userDataFunctions = {
                 throw 'Error: Last name cannot contain numbers.'
             }
         }
-        console.log(lastName)
 
         // error checking for email
         // html input type will check that it's a valid email, should we do checking here too? 
-        console.log(email)
         
         const userCollection = await users();
-        console.log(userCollection)
         const someUser = await userCollection.findOne({ email });
         
 
@@ -64,7 +60,6 @@ let userDataFunctions = {
         // error checking for userName (like a user nickname)
         userName = validation.checkString(userName, 'User name');
 
-        console.log(userName)
         // error checking for password
         password = validation.checkString(password, 'Password');
         for (let x of password) {  // check whether it has spaces (throw an error if yes)
@@ -81,11 +76,9 @@ let userDataFunctions = {
         if (role !== 'user' && role !== 'admin') throw "Role must be either 'user' or 'admin'"
 
         /*******************error checking end******************/
-        console.log('inpVal passed')
         // hash password using bcrypt
         const saltRounds = 16;
         const hash = await bcrypt.hash(password, saltRounds);
-
         // insert new user into the database
         let newUser = {
             firstName: firstName,
@@ -98,7 +91,6 @@ let userDataFunctions = {
         };
 
         let registrationCompleted = false // this var will tell use if the registration was successful or not
-        userCollection = await users();
         const insertInfo = await userCollection.insertOne(newUser); // insert new user info into the collection
         if (!insertInfo.acknowledged || !insertInfo.insertedId) { // check if the insertInfo is acknowledged, and if the insertedId exists
             throw 'Could not add user'; // if either condition is met, then the user cannot be added
@@ -107,7 +99,7 @@ let userDataFunctions = {
             registrationCompleted = true; // otherwise, return that it's successful
         }
 
-
+        console.log(insertInfo)
         // we need to choose whether we return a status report or the new user itself    
         // {Michael}: I opt for both, so we can load home.handlebars within the /register route
 
@@ -118,6 +110,7 @@ let userDataFunctions = {
 
         return returnObj; // return registration status and user data
       } catch (e) {
+        console.error(e)
         throw e
       }
     },

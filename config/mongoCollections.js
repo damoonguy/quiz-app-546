@@ -2,7 +2,6 @@ import { dbConnection } from './mongoConnection.js';
 
 const getCollectionFn = (collection) => {
   let _col = undefined;
-  console.log(collection)
   return async () => {
     if (!_col) {
       const db = await dbConnection();

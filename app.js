@@ -35,6 +35,9 @@ const handlebarsInstance = exphbs.create({
     },
     isdefined: (val) => {
         return val != undefined;
+    },
+    eq: (val1, val2) => {
+      return val1 == val2;
     }
   }
 });
@@ -61,7 +64,25 @@ app.use(rewriteUnsupportedBrowserMethods);
 app.engine('handlebars', handlebarsInstance.engine);
 app.set('view engine', 'handlebars');
 
+app.use('/', async (req, res, next) => {
+  const date = new Date().toUTCString()
+     let str = "Non-Authenticated"
+     
+     if (req.session.user !== undefined) {
+          str = "Authenticated"
+          if (req.session.user.role === 'admin') {
+               str += ' Administrator User'
+          } else {
+               str += ' User'
+          }
+     }
+     console.log(`[${date}]: ${req.method} ${req.originalUrl} (${str})`)
+     next();
+})
+
 buildRoutes(app);
+
+
 
 app.listen(3000, () => {
   console.log("We've now got a server!");
