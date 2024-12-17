@@ -34,6 +34,16 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
+app.use('/admin', (req, res, next) => {
+     if(!req.session.user) { // if a user is not logged in
+          return res.redirect('/login'); // redirect them to the GET /signinuser route
+     }
+     else if ( (req.session.user) && (req.session.user.role !== 'admin') ){ // if the user is logged in, the middleware will "fall through" calling the next() callback  
+        return res.redirect('/user');
+     }
+     next();
+});
+
 buildRoutes(app);
 
 const port = 3000;
