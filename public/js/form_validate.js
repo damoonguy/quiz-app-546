@@ -21,6 +21,9 @@ let errorDiv = document.getElementById('error');
 let passwordInput = document.getElementById('password');
 let pwLabel = document.getElementById('passwordLabel');
 
+let roleInput = document.getElementById('role');
+let rLabel = document.getElementById('roleLabel');
+
 if (registrationForm) {
     registrationForm.addEventListener('submit', (event) => {
         event.preventDefault(); // stops website from refreshing everytime the form is submitted
@@ -134,6 +137,26 @@ if (registrationForm) {
             passwordInput.focus();
             passwordInput.className = 'inputClass';
         }
+
+       // roleInput checking
+        if (roleInput) {
+            roleInput.classList.remove('inputClass');
+            errorDiv.hidden = true;
+            rLabel.classList.remove('error');
+
+            roleInput = validation.checkString(roleInput);
+            if(roleInput != 'admin' || roleInput !== 'user') {
+                throw 'Error: Role is invalid. You must be an admin or user.';
+            }
+        } else {
+            roleInput = ''; // if the user submits the form without choosing a role, the website shows an error that they must choose some role
+            errorDiv.hidden = false;
+            errorDiv.innerHTML = 'You must choose a role';
+            rLabel.className = 'error';
+            roleInput.focus();
+            roleInput.className = 'inputClass';
+        }
+
 
 
         registrationForm.reset(); // empty the form (remove previous input)

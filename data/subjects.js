@@ -1,8 +1,8 @@
 import { subjects } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import validation from '../validation.js';
-import quizzes from './quizzes.js';
-import questions from './quizzes.js';
+// import quizzes from './quizzes.js';
+// import questions from './quizzes.js';
 
 let subjectDataFunctions = {
     // get all the subjects in the subjects collection
