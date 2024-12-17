@@ -1,26 +1,22 @@
 // Set up express server + Mongo Connection
-import express from 'express'
 const app = express();
-import session from 'express-session'
 import buildRoutes from './routes/index.js';
-// import path, {dirname} from 'path'
-
-import bodyParser from "body-parser"
-import cors from "cors"
-import dotenv from "dotenv"
+import express from 'express';
+import path, {dirname} from 'path';
+import exphbs from "express-handlebars";
+import session from "express-session";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
 
 
 // dotenv.config()
 
-
-import exphbs from "express-handlebars"
-
-// import {fileURLToPath} from 'url'
-
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
-
-const staticDir = express.static('public');
+app.use(session({
+  name: 'AuthenticationState',
+  secret: 'JAXWORLD',
+  resave: false,
+  saveUninitialized: false
+}));
 
 const handlebarsInstance = exphbs.create({
   defaultLayout: 'main',
@@ -51,9 +47,8 @@ const handlebarsInstance = exphbs.create({
 //   next();
 // };
 
-// app.use(cors());
-// app.use('/public', express.static(__dirname + '/public'));
-app.use('/public', staticDir);
+
+app.use('/public', express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 // app.use(bodyParser.json())

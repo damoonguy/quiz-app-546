@@ -3,13 +3,9 @@
 
 import {Router} from 'express'
 
-const checkBody = (body) => {
-  
-}
-
 const router = Router();
 
-router.route('/admin')
+router.route('/')
   .get(async (req, res) => {
     try {
       

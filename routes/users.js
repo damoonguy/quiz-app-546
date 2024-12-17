@@ -11,6 +11,7 @@ import jwt from 'jsonwebtoken';
 import { registerUser, loginUser } from '../public/js/index.js';
 import { userData } from '../data/index.js';
 import validation from '../validation.js';
+import userAuth from "../data/users.js";
 
 const router = Router();
 
@@ -24,7 +25,11 @@ router
   .route('/')
   .get(async (req, res) => {
     try {
-      res.render('home.handlebars');
+      if (req.session.user) {
+        res.render('home.handlebars', {user: req.session.user})
+      } else {
+        res.render('home.handlebars')
+      }
     } catch (e) {
       res.sendStatus(500).json({ error: e });
     }
@@ -38,13 +43,33 @@ router
     } catch (e) {
       res.status(500).json({ error: e });
     }
-  });
+  })
+  .post(async (req, res) => {
+    try {
+        const {email, password} = req.body
+        if (!email || !password) throw "All inputs must be specified";
+  
+        // Will return user: object
+        req.session.user = await userAuth.signInUser(email, password);
+        if (!req.session.user) {
+            throw "Login failure."
+        }
+  
+        if (req.session.user.role === 'admin') {
+          return res.redirect('/admin')
+        } else {
+          return res.redirect('/')
+        }
+    } catch (e) {
+        return res.status(500).json({message: "something went terribly wrong.", error: e})
+    }
+  });  
 
 router
   .route('/register')
   .get(async (req, res) => {
     try {
-      res.render('register');
+      res.render('register.handlebars', {layout: false});
     } catch (e) {
       res.status(500).json({ error: e });
     }
@@ -57,6 +82,9 @@ router
         .status(400)
         .json({ error: 'There are no fields in the request body' });
     }
+
+    if(!userInfo.firstName || !userInfo.lastName || !userInfo.email || !userInfo.userName || !userInfo.password || !userInfo.role)
+      throw 'Error: All input must be specified.';
 
     // error checking for firstName
     try {
@@ -119,19 +147,30 @@ router
     }
 
     try {
-      const newUser = await userData.registerUser(
+      // Will return {user: object, registrationCompleted: boolean}
+      const authRes = userAuth.registerUser(
         userInfo.firstName,
         userInfo.lastName,
         userInfo.username,
         userInfo.email,
-        userInfo.password
-      );
-
-      return res.redirect('/login');
+        userInfo.password,
+        userInfo.role);
+  
+        if (authRes.registrationCompleted !== true) {
+          throw 'Error: Sign up failure';
+        }
+  
+        req.session.user = authRes.user;
+  
+        if (req.session.user.role === 'admin') {
+          return res.redirect('/admin');
+        } else {
+          return res.redirect('/');
+        }
     } catch (e) {
-      res.sendStatus(500).json({error: 'Internal Server Error'});
-      return res.render('register');
+      return res.status(500).json({message: 'Something went terribly wrong.', error: e});
     }
+    
   });
 
 export default router;

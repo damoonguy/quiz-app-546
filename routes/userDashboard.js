@@ -15,7 +15,7 @@ router.route('/')
     try {
       const userCollection = await users();
       const allUsers = await userCollection.find({}).toArray();
-      res.render('users/dashboard', {
+      res.render('userDashboard', {
         layout: 'dashboard',
         title: 'User Dashboard',
         users: allUsers
