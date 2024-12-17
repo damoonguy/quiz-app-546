@@ -13,9 +13,7 @@ export const buildRoutes = (app) => {
     app.use('/user', userRoutes);
 
     app.get('/', (req, res) => {
-        res.render('home', {
-            title: 'Quiz App'
-        });
+        res.redirect('/login')
     });
 
     app.route('/login')
