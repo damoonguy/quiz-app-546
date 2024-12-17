@@ -54,7 +54,6 @@ const buildRoutes = (app) => {
                 }
 
                 req.session.user = {...user, _id: user._id.toString()};
-                console.log(req.session.user)
 
                 res.redirect(user.role === 'admin' ? '/admin' : '/users');
             } catch (e) {
@@ -527,6 +526,7 @@ const buildRoutes = (app) => {
                 return res.status(401).json({ error: 'Not authenticated' });
             }
 
+            
             const searchTerm = req.query.term;
             const quizCollection = await quizzes();
 
@@ -552,14 +552,14 @@ const buildRoutes = (app) => {
                 category: quiz.category || 'General',
                 creator: quiz.createdBy
             }));
-
-            res.render('search.handlebars', {Title: 'Search', quizzes: formattedResults});
+            console.log(formattedResults)
+            return res.json({quizzes: formattedResults});
         } catch (e) {
             res.status(500).json({ error: e.message });
         }
     });
 
-    app.post('/quiz/:id/delete', async (req, res) => {
+    app.delete('/quiz/:id/delete', async (req, res) => {
         try {
             if (!req.session.user) {
                 return res.status(401).json({ error: 'Not logged in' });

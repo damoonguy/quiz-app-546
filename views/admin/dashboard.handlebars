@@ -52,7 +52,7 @@
             <button class="btn-primary" onclick="createQuiz()">Create New Quiz</button>
             <button class="btn-secondary" onclick="viewAllQuizzes()">View All Quizzes</button>
         </div>
-        <div class="quiz-list">
+        <div id="quiz-grid" class="quiz-grid">
             {{#each quizzes}}
             <div class="quiz-card">
                 <h3>{{this.title}}</h3>

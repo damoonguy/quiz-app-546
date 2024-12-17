@@ -1,46 +1,46 @@
 // Client-side JS for uploading, taking, saving quizzes + other functionality
-
- 
-import bcrypt from "bcryptjs"
-import xss from "xss"
-
-
-// Client-side JS for uploading, taking, saving quizzes + other functionality
 const searchQuizzes = async (searchTerm) => {
     try {
-      const response = await axios.get(`/api/quizzes/search?term=${searchTerm}`);
-      displayQuizzes(response.data);
+      const response = await fetch(`/api/quizzes/search?term=${searchTerm}`);
+      console.log(response)
+      const data = await response.json()
+      console.log(data)
+      displayQuizzes(data.quizzes);
     } catch (error) {
       console.error('Error searching quizzes:', error);
-      showError('Failed to search quizzes');
     }
   };
   
+const startQuiz = async (id) => {
+    const res = await fetch(`/quiz/${id}`)
+    return;
+}
+
   const displayQuizzes = (quizzes) => {
-    const quizContainer = document.getElementById('quiz-list');
+    const quizContainer = document.getElementById('quiz-grid');
+    console.log(quizContainer)
     quizContainer.innerHTML = '';
-  
-    quizzes.forEach(quiz => {
+    
+
+    for (let i in quizzes) {
+      const quiz = quizzes[i]
+      console.log(quiz)
       const quizCard = document.createElement('div');
       quizCard.className = 'quiz-card';
 
       const title = document.createElement('h3');
-      title.textContent = quiz.title;
+      title.innerText = quiz.title;
       quizCard.appendChild(title);
 
       const description = document.createElement('p');
-      description.textContent = quiz.description;
+      description.innerText = quiz.description;
       quizCard.appendChild(description);
 
       const metaDiv = document.createElement('div');
       metaDiv.className = 'quiz-meta';
-      
-      const creatorSpan = document.createElement('span');
-      creatorSpan.textContent = 'By: ${quiz.creatorUsername}';
-      metaDiv.appendChild(creatorSpan);
 
       const questionSpan = document.createElement('span');
-      questionSpan.textContent = 'Questions: ${quiz.questionCount}';
+      questionSpan.innerText = `Questions: ${quiz.questionCount}`;
       metaDiv.appendChild(questionSpan);
       
       quizCard.appendChild(metaDiv);
@@ -51,7 +51,7 @@ const searchQuizzes = async (searchTerm) => {
       const startButton = document.createElement('button');
       startButton.className = 'btn-primary';
       startButton.textContent = 'Start Quiz';
-      startButton.addEventListener('click', () => startQuiz(quiz._id));
+      startButton.addEventListener('click', () => startQuiz(quiz._id.toString()));
 
       const saveButton = document.createElement('button');
       saveButton.className = 'btn-secondary';
@@ -63,7 +63,7 @@ const searchQuizzes = async (searchTerm) => {
       quizCard.appendChild(actionsDiv);
 
       quizContainer.appendChild(quizCard);
-    });
+    };
   };
   
 
@@ -118,7 +118,7 @@ const searchQuizzes = async (searchTerm) => {
 
     try {
         const response = await fetch(`/quiz/${quizId}/delete`, {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -136,17 +136,16 @@ const searchQuizzes = async (searchTerm) => {
 }
 
   document.addEventListener('DOMContentLoaded', () => {
-    let searchInput = document.getElementById('quiz-search');
-    let searchButton = document.getElementById('search-button');
+    const searchInput = document.getElementById('quiz-search');
+    const searchButton = document.getElementById('search-button');
     
     if (searchButton && searchInput) {
-        let debounceTimeout;
+        
 
         const performSearch = async (query) => {
             try {
-                const searchTerm = query.value.trim();
+                const searchTerm = query.trim();
                 const response = await fetch(`/api/quizzes/search?term=${encodeURIComponent(searchTerm)}`);
-                console.log(query.value)
                 if (!response.ok) {
                     throw new Error('Search failed');
                 }
@@ -155,7 +154,6 @@ const searchQuizzes = async (searchTerm) => {
                 const quizGrid = document.querySelector('.quiz-grid');
                 
                 if (!quizGrid) return;
-                console.log(quizGrid)
                 quizGrid.innerHTML = '';
 
                 if (quizzes.length === 0) {
@@ -163,7 +161,8 @@ const searchQuizzes = async (searchTerm) => {
                     return;
                 }
 
-                quizzes.forEach(quiz => {
+                for (let i in quizzes) {
+                    const quiz = quizzes[i]
                     const quizCard = document.createElement('div');
                     quizCard.className = 'quiz-card';
                     quizCard.innerHTML = `
@@ -179,27 +178,17 @@ const searchQuizzes = async (searchTerm) => {
                         </div>
                     `;
                     quizGrid.appendChild(quizCard);
-                });
+                };
             } catch (error) {
                 console.error('Search error:', error);
                 alert('Failed to search quizzes');
             }
         };
-        searchInput.addEventListener('input', () => {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(performSearch, 300);
-        });
-
+        
         searchButton.addEventListener('click', (e) => {
             e.preventDefault();
-            performSearch(document.getElementById('quiz-search').value);
-        });
-
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                performSearch();
-            }
+            const query = document.getElementById('quiz-search').value
+            searchQuizzes(query);
         });
     }
 });

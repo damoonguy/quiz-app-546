@@ -74,9 +74,9 @@
             <h2>Available Quizzes</h2>
             <div class="search-bar">
                 <input type="text" placeholder="Search quizzes..." id="quiz-search">
-                <button class="btn-primary" id="search-button">Search</button>
+                <button class="btn-primary" id="search-button" >Search</button>
             </div>
-            <div class="quiz-grid">
+            <div id="quiz-grid" class="quiz-grid">
                 {{#each availableQuizzes}}
                 <div class="quiz-card">
                     <h3>{{this.title}}</h3>
