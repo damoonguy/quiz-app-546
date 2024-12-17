@@ -6,6 +6,14 @@
   margin-bottom: 20px;
 }
 
+div.quiz-meta > * {
+  margin: 5px;
+}
+
+div.quiz-actions > * {
+  margin: 5px;
+}
+
 .quiz-management {
   margin-top: 30px;
 }
@@ -59,10 +67,14 @@
   margin-top: 20px;
 }
 
-.header-actions > * {
+.header-actions {
   display: flex;
   flex-direction: row;
-  max-width: 100px;
+}
+
+.header-actions > * {
+  flex-grow: 1;
+  justify-content: center;
 }
 
 .search-bar input {
@@ -134,4 +146,52 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 15px;
+}
+
+.quiz-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.leaderboard-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.leaderboard-card {
+  margin: 10px;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+}
+
+.leaderboard-card > * {
+  flex-grow: 1;
+}
+
+.leaderboard-card > .username {
+  position: relative;
+}
+
+.leaderboard-card > .score {
+  position: relative;
+  right: 0px;
+}
+
+#rank1 {
+  background-color: rgba(255, 217, 0, 0.8);
+}
+
+#rank2 {
+  background-color: rgba(192, 192, 192, 0.8);
+}
+
+#rank3 {
+  background-color: rgba(165, 91, 42, 0.8);
 }

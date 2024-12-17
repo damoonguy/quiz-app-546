@@ -3,16 +3,14 @@ import userRoutes from './users.js';
 import { users, quizzes } from '../config/mongoCollections.js';
 import { validateEmail, validatePassword, validateName, validateUsername, validateRole, hashPassword, comparePasswords } from '../helpers.js';
 import { ObjectId, ReturnDocument } from 'mongodb';
+import userDataFunctions from '../data/users.js';
 
 const buildRoutes = (app) => {
     app.use('/admin', adminRoutes);
     app.use('/users', userRoutes);
 
     app.get('/', (req, res) => {
-        res.render('home', {
-            layout: 'main',
-            title: 'Quiz App'
-        });
+        res.redirect('/login');
     });
 
     app.route('/login')
@@ -526,7 +524,7 @@ const buildRoutes = (app) => {
                 return res.status(401).json({ error: 'Not authenticated' });
             }
 
-            
+            console.log('HELP')
             const searchTerm = req.query.term;
             const quizCollection = await quizzes();
 
@@ -543,14 +541,14 @@ const buildRoutes = (app) => {
             }
 
             const searchResults = await quizCollection.find(query).toArray();
-
+            
             const formattedResults = searchResults.map(quiz => ({
                 _id: quiz._id,
                 title: quiz.title,
                 description: quiz.description,
                 questionCount: quiz.questions.length,
                 category: quiz.category || 'General',
-                creator: quiz.createdBy
+                creator: quiz.createdBy.toString()
             }));
             console.log(formattedResults)
             return res.json({quizzes: formattedResults});

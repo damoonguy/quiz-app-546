@@ -2,19 +2,12 @@
 const searchQuizzes = async (searchTerm) => {
     try {
       const response = await fetch(`/api/quizzes/search?term=${searchTerm}`);
-      console.log(response)
       const data = await response.json()
-      console.log(data)
       displayQuizzes(data.quizzes);
     } catch (error) {
       console.error('Error searching quizzes:', error);
     }
   };
-  
-const startQuiz = async (id) => {
-    const res = await fetch(`/quiz/${id}`)
-    return;
-}
 
   const displayQuizzes = (quizzes) => {
     const quizContainer = document.getElementById('quiz-grid');
@@ -39,9 +32,17 @@ const startQuiz = async (id) => {
       const metaDiv = document.createElement('div');
       metaDiv.className = 'quiz-meta';
 
-      const questionSpan = document.createElement('span');
-      questionSpan.innerText = `Questions: ${quiz.questionCount}`;
-      metaDiv.appendChild(questionSpan);
+      const questionCount = document.createElement('span');
+      questionCount.innerText = `Questions: ${quiz.questionCount}`;
+      metaDiv.appendChild(questionCount);
+
+      const questionCategory = document.createElement('span');
+      questionCategory.innerText = `Category: ${quiz.category}`;
+      metaDiv.appendChild(questionCategory);
+
+      const questionCreator = document.createElement('span');
+      questionCreator.innerText = `Created by: ${quiz.creator}`;
+      metaDiv.appendChild(questionCreator);
       
       quizCard.appendChild(metaDiv);
 
@@ -50,8 +51,8 @@ const startQuiz = async (id) => {
 
       const startButton = document.createElement('button');
       startButton.className = 'btn-primary';
-      startButton.textContent = 'Start Quiz';
-      startButton.addEventListener('click', () => startQuiz(quiz._id.toString()));
+      startButton.textContent = 'Take Quiz';
+      startButton.addEventListener('click', () => window.location.href=`/quiz/${quiz._id.toString()}`);
 
       const saveButton = document.createElement('button');
       saveButton.className = 'btn-secondary';
@@ -140,50 +141,6 @@ const startQuiz = async (id) => {
     const searchButton = document.getElementById('search-button');
     
     if (searchButton && searchInput) {
-        
-
-        const performSearch = async (query) => {
-            try {
-                const searchTerm = query.trim();
-                const response = await fetch(`/api/quizzes/search?term=${encodeURIComponent(searchTerm)}`);
-                if (!response.ok) {
-                    throw new Error('Search failed');
-                }
-
-                const quizzes = await response.json();
-                const quizGrid = document.querySelector('.quiz-grid');
-                
-                if (!quizGrid) return;
-                quizGrid.innerHTML = '';
-
-                if (quizzes.length === 0) {
-                    quizGrid.innerHTML = '<div class="no-results">No quizzes found</div>';
-                    return;
-                }
-
-                for (let i in quizzes) {
-                    const quiz = quizzes[i]
-                    const quizCard = document.createElement('div');
-                    quizCard.className = 'quiz-card';
-                    quizCard.innerHTML = `
-                        <h3>${quiz.title}</h3>
-                        <p>${quiz.description}</p>
-                        <div class="quiz-meta">
-                            <span>Questions: ${quiz.questionCount}</span>
-                            <span>Category: ${quiz.category}</span>
-                        </div>
-                        <div class="quiz-actions">
-                            <button class="btn-primary" onclick="window.location.href='/quiz/${quiz._id}'">Take Quiz</button>
-                            <button class="btn-secondary" onclick="saveForLater('${quiz._id}')">Save for Later</button>
-                        </div>
-                    `;
-                    quizGrid.appendChild(quizCard);
-                };
-            } catch (error) {
-                console.error('Search error:', error);
-                alert('Failed to search quizzes');
-            }
-        };
         
         searchButton.addEventListener('click', (e) => {
             e.preventDefault();

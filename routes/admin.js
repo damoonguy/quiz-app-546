@@ -6,16 +6,8 @@ import { quizzes, users } from '../config/mongoCollections.js';
 
 const router = Router();
 
-router.route('/')
-  .get(async (req, res) => {
-    try {
-      res.render('home.handlebars', {user: req.session.user, title: 'Admin Home'})
-    } catch (e) {
-      res.status(500).render('error', {message: 'Something went wrong in /admin', title: 'Error', error: e})
-    }
-  })
 
-router.route('/dashboard')
+router.route('/')
   .get(async (req, res) => {
     try {
       if (req.session.user !== undefined) {
@@ -23,17 +15,24 @@ router.route('/dashboard')
           const quizCollection = await quizzes();
           const userCollection = await users();
           
-          const totalQuizzes = await quizCollection.countDocuments();
-          const totalUsers = await userCollection.countDocuments();
+          const quizArr = await quizCollection.find().toArray();
+          const userArr = await userCollection.find().toArray();
+
+          const totalQuizzes = quizArr.length
+          const totalUsers = userArr.length
           
           res.render('admin/dashboard', {
               user: req.session.user,
               layout: 'dashboard',
               title: 'Admin Dashboard',
-              totalQuizzes: totalQuizzes || 0,
-              totalUsers: totalUsers || 0,
-              activeUsers: Math.floor(totalUsers * 0.7), // test number 
-              recentActivity: [] // test
+              stats: {
+                totalQuizzes: totalQuizzes || 0,
+                totalUsers: totalUsers || 0,
+                activeUsers: Math.floor(totalUsers * 0.7) // test number 
+              },
+              quizzes: quizArr,
+              users: userArr
+              
           });
         } else {
           res.redirect('/users')

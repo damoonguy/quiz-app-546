@@ -39,7 +39,7 @@
                 <div class="quiz-actions">
                     <button class="btn-primary" onclick="window.location.href='/quiz/{{this._id}}/review'">Review
                         Quiz</button>
-                    <button class="btn-danger" onclick="deleteQuiz('{{this._id}}')">Delete Quiz</button>
+                    <button class="btn-warning" onclick="deleteQuiz('{{this._id}}')">Delete Quiz</button>
                 </div>
             </div>
             {{else}}
@@ -56,12 +56,12 @@
             <h2>Leaderboard</h2>
             <div class="leaderboard-grid">
                 {{#each leaderboard}}
-                <div class="leaderboard-card">
+                <div id="rank{{add @index 1}}" class="leaderboard-card">
                     <div class="rank">{{add @index 1}}</div>
-                    <div class="user-info">
-                        <span class="username">{{this.username}}</span>
-                        <span class="score">{{this.averageScore}}%</span>
-                    </div>
+                    
+                    <span class="username">{{this.username}}</span>
+                    <span class="score">{{this.averageScore}}%</span>
+                    
                 </div>
                 {{else}}
                 <div class="no-leaders">No quiz results yet</div>
