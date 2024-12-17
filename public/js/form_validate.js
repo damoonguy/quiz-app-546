@@ -25,7 +25,7 @@ if (registrationForm) {
     registrationForm.addEventListener('submit', (event) => {
         event.preventDefault(); // stops website from refreshing everytime the form is submitted
 
-        // firstNameInput error checking
+        // firstNameInput handling
         if (firstNameInput) {
             firstNameInput = validation.checkString(firstNameInput, 'First name');
             for (let x of firstNameInput) {  // check whether it has numbers (throw an error if yes)
@@ -112,8 +112,19 @@ if (registrationForm) {
                     throw 'Error: Password cannot have empty spaces.'
                 }
             }
-            if (passwordInput.length < 8) { // check is the length is invalid (throw an error if yes)
+            if (passwordInput.length < 8) { // check is the length (must be at least 8 characters long) is invalid (throw an error if yes)
                 throw 'Error: Password must be at least 8 characters long.';
+            }
+
+            let hasNumber = false; // password requires at least one number
+            for (let x of passwordInput) {
+                if (!isNaN(x)) {
+                    hasNumber = true;
+                }
+            }
+
+            if (hasNumber === false) {
+                throw 'Error: Password have at least 1 number.';
             }
         } else {
             passwordInput = ''; // if the user submits the form without typing a password, the website shows an error that they must type some password
