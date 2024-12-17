@@ -1,4 +1,4 @@
-// sign up form handling
+// register form handling
 // get elements from the html through their respective IDs
 import validation from '../../helpers.js';
 
@@ -163,6 +163,7 @@ if (registrationForm) {
     });
 }
 
+// sign in form handling
 let signInForm = document.getElementById('login-form');
 
 if (signInForm) {

@@ -37,7 +37,6 @@ let userDataFunctions = {
                 throw 'Error: First name cannot contain numbers.';
             }
         }
-        console.log(firstName)
 
         // error checking for lastName
         lastName = validation.checkString(lastName, 'Last name');
@@ -46,25 +45,16 @@ let userDataFunctions = {
                 throw 'Error: Last name cannot contain numbers.';
             }
         }
-        console.log(lastName)
 
         // error checking for email
         // html input type will check that it's a valid email, should we do checking here too? 
-        console.log(email)
-        
+        email = validation.checkString(email, 'Email'); 
         const userCollection = await users();
-        console.log(userCollection)
         const someUser = await userCollection.findOne({ email });
-        
-
         if (someUser != null) throw 'Error: Email is already in use.'; // check if another user already used that email
-
-        
 
         // error checking for userName (like a user nickname)
         userName = validation.checkString(userName, 'User name');
-
-        console.log(userName)
 
         // error checking for password
         password = validation.checkString(password, 'Password');
@@ -93,7 +83,6 @@ let userDataFunctions = {
         if (role !== 'user' && role !== 'admin') throw "Role must be either 'user' or 'admin'";
 
         /*******************error checking end******************/
-        console.log('inpVal passed')
         // hash password using bcrypt
         const saltRounds = 16;
         const hash = await bcrypt.hash(password, saltRounds);
@@ -128,13 +117,14 @@ let userDataFunctions = {
     } catch (e) {
         return res.status(400).json({ error: e });
     }
-
 },
 
     async signInUser(email, password) {
-        // email handling
-        // html input type will check that it's a valid email, should we do checking here too? 
-        email = validation.checkString(email, 'Email');
+        // error checking for email
+        email = validation.checkString(email, 'Email'); 
+        
+        // error checking for password
+        password = validation.checkString(password, 'Password');
 
         // find user by their email
         const userCollection = await users();
@@ -144,9 +134,6 @@ let userDataFunctions = {
         if (user === null) { // if there isn't a user in the DB w/ that userId, then that userId does not exist
             throw 'Error: No user found with that email.';
         }
-
-        // error checking for password
-        password = validation.checkString(password, 'Password');
 
         // if email supplied is found in the DB, use bcrypt to compare the hashed password in the database w/ password input parameter
         let compareToMatch = await bcrypt.compare(password, user.password);
