@@ -1,0 +1,106 @@
+<div class="admin-dashboard">
+    <div class="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <a href="/logout" class="btn-danger">Logout</a>
+    </div>
+    <div class="admin-stats">
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <p>{{stats.totalUsers}}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Quizzes</h3>
+            <p>{{stats.totalQuizzes}}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Active Today</h3>
+            <p>{{stats.activeToday}}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Quizzes Today</h3>
+            <p>{{stats.quizzesToday}}</p>
+        </div>
+    </div>
+    <section class="admin-section">
+        <h2>User Management</h2>
+        <div class="user-list users-grid">
+            {{#each users}}
+            <div class="stat-card user-card" data-user-id="{{this._id}}">
+                <div class="user-info">
+                    <h3>{{this.username}}</h3>
+                    <p>{{this.email}}</p>
+                </div>
+                <div class="user-stats">
+                    <div class="stat">
+                        <span class="label">Quizzes Taken:</span>
+                        <span class="value">{{this.quizzesTaken}}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Average Score:</span>
+                        <span class="value">{{this.averageScore}}%</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-danger" onclick="banUser('{{this._id}}')">Ban User</button>
+                </div>
+            </div>
+            {{else}}
+            <div class="no-results">No users found</div>
+            {{/each}}
+        </div>
+    </section>
+    <section class="admin-section">
+        <h2>Reports & Analytics</h2>
+        <div class="reports-grid">
+            <div class="report-card">
+                <h3>Popular Categories</h3>
+                <div class="category-rankings">
+                    {{#each analytics.popularCategories}}
+                    <div class="ranking-item">
+                        <span class="rank">#{{add @index 1}}</span>
+                        <span class="category">{{this.category}}</span>
+                        <span class="count">({{this.count}} quizzes)</span>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="report-card">
+                <h3>User Activity</h3>
+                <div class="activity-stats">
+                    <div class="activity-item">
+                        <span class="label">New Users (7 days):</span>
+                        <span class="value">{{analytics.userActivity.newUsers}}</span>
+                    </div>
+                    <div class="activity-item">
+                        <span class="label">New Quizzes (7 days):</span>
+                        <span class="value">{{analytics.userActivity.newQuizzes}}</span>
+                    </div>
+                    <h4>Recent Achievements</h4>
+                    <div class="achievements-list">
+                        {{#each analytics.userActivity.recentBadges}}
+                        <div class="achievement-item">
+                            <span class="username">{{this.username}}</span>
+                            <span class="badge">{{this.badge}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            <div class="report-card">
+                <h3>Quiz Performance</h3>
+                <div class="performance-stats">
+                    {{#each analytics.categoryPerformance}}
+                    <div class="performance-item">
+                        <span class="category">{{this.category}}</span>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: {{this.averageScore}}%"></div>
+                            <span class="score-text">{{this.averageScore}}%</span>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="/public/js/admin/userManagement.js"></script>
